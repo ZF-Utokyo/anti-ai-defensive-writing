@@ -104,6 +104,7 @@ class SkillPackageChecks(unittest.TestCase):
         self.assertIn("skills/anti-ai-defensive-writing", manifest["files"])
         self.assertIn("prompts", manifest["files"])
         self.assertIn("docs", manifest["files"])
+        self.assertIn("assets", manifest["files"])
         self.assertNotIn("dependencies", manifest)
 
     def test_integrity_checker_is_packaged(self):
@@ -135,6 +136,7 @@ class SkillPackageChecks(unittest.TestCase):
         for document in documents:
             text = document.read_text(encoding="utf-8")
             targets = re.findall(r"\[[^\]]+\]\(([^)]+)\)", text)
+            targets.extend(re.findall(r'(?:href|src)="([^"]+)"', text))
             missing = []
             for target in targets:
                 if target.startswith(("http://", "https://", "#")):

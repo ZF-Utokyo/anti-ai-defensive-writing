@@ -1,12 +1,13 @@
-# Anti AI-Defensive Writing Skill
+<p align="center">
+  <img src="assets/readme-icon.svg" width="88" alt="划掉多余横线并保留证据的论文图标">
+</p>
 
-[English](README.md) · **简体中文快速上手**
+<h1 align="center">Anti AI-Defensive Writing Skill</h1>
 
-> AI 写作是不是又加了 em dash、凭空出现的置信区间、莫名其妙的指标，以及
-> 没完没了的 “we do not claim” 式免责声明？
+<p align="center"><a href="README.md">English</a> · <strong>简体中文</strong></p>
 
-这个英文 Skill 会清理无来源的限定语、虚构的严谨、抽象表达和格式残留，同时
-保留作者真正提供的证据、范围与不确定性。
+<p align="center"><em>AI 写作是不是又加了 em dash、凭空出现的置信区间、
+莫名其妙的指标，以及没完没了的 “we do not claim” 式免责声明？</em></p>
 
 ## 一键安装
 

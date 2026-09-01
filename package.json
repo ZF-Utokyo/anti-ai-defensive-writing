@@ -8,6 +8,7 @@
     "anti-ai-defensive-writing": "bin/install.mjs"
   },
   "files": [
+    "assets",
     "bin/install.mjs",
     "docs",
     "skills/anti-ai-defensive-writing",

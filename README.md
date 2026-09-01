@@ -1,17 +1,20 @@
-# Anti AI-Defensive Writing Skill
+<p align="center">
+  <img src="assets/readme-icon.svg" width="88" alt="Document with a removed dash and an evidence-preserving check mark">
+</p>
 
-**English** · [简体中文快速上手](README.zh-CN.md)
+<h1 align="center">Anti AI-Defensive Writing Skill</h1>
 
-> Struggling with em dashes, invented confidence intervals, fake metrics, and
-> endless “we do not claim” disclaimers in AI-assisted academic writing?
+<p align="center"><strong>English</strong> · <a href="README.zh-CN.md">简体中文</a></p>
 
-Anti AI-Defensive Writing removes unsupported caveats, invented rigor, opaque
-abstraction, and formatting residue while preserving the evidence and uncertainty
-that the author actually supplied.
+<p align="center"><em>Struggling with em dashes, invented confidence intervals,
+fake metrics, and endless “we do not claim” disclaimers in AI-assisted academic
+writing?</em></p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![Test](https://github.com/ZF-Utokyo/anti-ai-defensive-writing/actions/workflows/test.yml/badge.svg)](https://github.com/ZF-Utokyo/anti-ai-defensive-writing/actions/workflows/test.yml)
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License"></a>
+  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="Pull requests welcome"></a>
+  <a href="https://github.com/ZF-Utokyo/anti-ai-defensive-writing/actions/workflows/test.yml"><img src="https://github.com/ZF-Utokyo/anti-ai-defensive-writing/actions/workflows/test.yml/badge.svg" alt="Test status"></a>
+</p>
 
 ## Install
 
