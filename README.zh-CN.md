@@ -7,7 +7,8 @@
 <p align="center"><a href="README.md">English</a> · <strong>简体中文</strong></p>
 
 <p align="center"><em>AI 写作是不是又加了 em dash、凭空出现的置信区间、
-莫名其妙的指标，以及没完没了的 “we do not claim” 式免责声明？</em></p>
+莫名其妙的指标、未经核验的 BibTeX 文献记录，以及没完没了的
+“we do not claim” 式免责声明？</em></p>
 
 ## 一键安装
 

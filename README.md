@@ -7,8 +7,8 @@
 <p align="center"><strong>English</strong> · <a href="README.zh-CN.md">简体中文</a></p>
 
 <p align="center"><em>Struggling with em dashes, invented confidence intervals,
-fake metrics, and endless “we do not claim” disclaimers in AI-assisted academic
-writing?</em></p>
+fake metrics, unverified BibTeX records, and endless “we do not claim” disclaimers
+in AI-assisted academic writing?</em></p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License"></a>
