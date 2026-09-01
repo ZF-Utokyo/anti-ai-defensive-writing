@@ -236,36 +236,6 @@ weakening supported claims.
 These are task entry points, not separate policy implementations. The repository
 checks that they retain the same evidence-integrity rules as the Skill.
 
-## Repository structure
-
-```text
-anti-ai-defensive-writing/
-├── .github/
-│   ├── ISSUE_TEMPLATE/false-positive.yml
-│   └── workflows/test.yml
-├── bin/install.mjs
-├── skills/anti-ai-defensive-writing/
-│   ├── SKILL.md
-│   ├── agents/openai.yaml
-│   ├── references/
-│   └── scripts/
-│       ├── check_academic_rewrite.py
-│       ├── check_manuscript_integrity.py
-│       └── verify_bibliography_online.py
-├── prompts/
-│   ├── quick-prompt.txt
-│   ├── audit-prompt.txt
-│   ├── full-manuscript-prompt.txt
-│   └── integrity-prompt.txt
-├── evals/cases.md
-├── tests/
-├── scripts/check_policy_sync.py
-├── README.zh-CN.md
-├── package.json
-├── CONTRIBUTING.md
-└── LICENSE
-```
-
 ## Boundaries
 
 This skill does not perform statistical analysis, replace peer review, or justify
