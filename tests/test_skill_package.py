@@ -103,6 +103,7 @@ class SkillPackageChecks(unittest.TestCase):
         self.assertEqual("bin/install.mjs", manifest["bin"]["anti-ai-defensive-writing"])
         self.assertIn("skills/anti-ai-defensive-writing", manifest["files"])
         self.assertIn("prompts", manifest["files"])
+        self.assertIn("docs", manifest["files"])
         self.assertNotIn("dependencies", manifest)
 
     def test_integrity_checker_is_packaged(self):
@@ -126,17 +127,22 @@ class SkillPackageChecks(unittest.TestCase):
             self.assertIn("Crossref", text)
 
     def test_repository_readme_links_exist(self):
-        for readme in (ROOT / "README.md", ROOT / "README.zh-CN.md"):
-            text = readme.read_text(encoding="utf-8")
+        documents = [
+            ROOT / "README.md",
+            ROOT / "README.zh-CN.md",
+            *ROOT.joinpath("docs").glob("*.md"),
+        ]
+        for document in documents:
+            text = document.read_text(encoding="utf-8")
             targets = re.findall(r"\[[^\]]+\]\(([^)]+)\)", text)
             missing = []
             for target in targets:
                 if target.startswith(("http://", "https://", "#")):
                     continue
                 local_target = target.split("#", 1)[0]
-                if local_target and not readme.parent.joinpath(local_target).exists():
+                if local_target and not document.parent.joinpath(local_target).exists():
                     missing.append(target)
-            self.assertEqual([], missing, msg=str(readme))
+            self.assertEqual([], missing, msg=str(document))
 
 
 if __name__ == "__main__":

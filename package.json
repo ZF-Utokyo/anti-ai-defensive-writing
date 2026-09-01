@@ -9,6 +9,7 @@
   },
   "files": [
     "bin/install.mjs",
+    "docs",
     "skills/anti-ai-defensive-writing",
     "prompts",
     "README.md",
