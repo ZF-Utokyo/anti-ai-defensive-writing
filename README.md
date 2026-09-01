@@ -4,7 +4,8 @@
 
 An English, zero-dependency AI skill for removing unrequested caveats, faux rigor,
 opaque abstraction, and formatting residue from academic writing without weakening
-claims that the evidence supports.
+claims that the evidence supports. It also provides an opt-in manuscript-integrity
+audit for LaTeX references, figures, tables, BibTeX, acronyms, and terminology.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
@@ -65,13 +66,15 @@ information.
 - overly cautious claims and unsolicited reviewer voice;
 - unsupported statistical and methodological additions;
 - em dashes, italics, bold text, and other synthetic formatting habits;
-- abstract or difficult sentences that can be made concrete.
+- abstract or difficult sentences that can be made concrete;
+- optional figure/table, cross-reference, BibTeX, acronym, and terminology audits.
 
-It has three modes:
+It has four modes:
 
 - **Draft:** write from supplied facts without inventing analytical machinery;
 - **Clean:** return a usable revision while preserving evidence and author voice;
-- **Audit:** identify consequential artifacts and propose minimal repairs.
+- **Audit:** identify consequential artifacts and propose minimal repairs;
+- **Integrity:** audit manuscript structure and metadata without silently editing it.
 
 The Skill adapts those modes to the academic context: abstract and introduction,
 methods, results, tables and captions, discussion and conclusion, or rebuttal and
@@ -88,11 +91,13 @@ user requests it.
 Problems are ordered by consequence:
 
 - **P0, evidence integrity:** changed or invented numbers, uncertainty, citations,
-  equations, metrics, probes, experiments, conditions, or claim scope;
+  equations, metrics, probes, experiments, conditions, claim scope, unresolved
+  references, or conflicting keys;
 - **P1, analytical defensiveness:** reflexive caveats, unsupported interpretations,
-  claim paralysis, vague abstraction, and reviewer voice;
+  claim paralysis, vague abstraction, reviewer voice, and structural or terminology
+  ambiguities;
 - **P2, presentation residue:** gratuitous em dashes, italics, bold text,
-  parentheticals, and table decoration.
+  parentheticals, table decoration, and other nonblocking cleanup.
 
 P0 always outranks style. The Skill never makes a sentence cleaner by making its
 evidence less accurate.
@@ -123,6 +128,49 @@ Use `--json` for machine-readable output. Use `--allow-new-analysis` or
 those changes. When the author explicitly identifies a number as a fabricated or
 unsourced draft artifact, pass `--allow-drop-number VALUE` once for each permitted
 deletion. All other numeric drift remains a P0 error.
+
+## Manuscript integrity audit
+
+The optional integrity workflow keeps structural checks separate from prose
+cleanup. For a LaTeX project, run:
+
+```bash
+python3 skills/anti-ai-defensive-writing/scripts/check_manuscript_integrity.py \
+  main.tex
+```
+
+The zero-dependency checker follows static `\input` and `\include` commands and
+discovers `\bibliography` and `\addbibresource` files. It reports:
+
+- unresolved or duplicate labels and citation keys;
+- figures and tables that are uncited, out of first-citation order, missing labels
+  or captions, or referenced with hard-coded numbers;
+- duplicate and unused BibTeX records, common missing fields, and malformed DOI or
+  URL values;
+- acronyms used before definition, repeated without a definition, or used with
+  inconsistent casing.
+
+Use `--bib FILE` when a bibliography cannot be discovered, `--no-unused-bib` for a
+shared library, `--known-acronym TERM` for an explicit field or venue exemption,
+`--json` for structured output, and `--strict` to fail on warnings. The script is
+read-only and makes no network requests.
+
+Semantic terminology consistency remains an agent task: the Skill builds an
+internal ledger of canonical terms, first definitions, abbreviations, variants,
+and intentional distinctions across the abstract, body, captions, tables, and
+supplement.
+
+External reference verification is optional. The workflow can use the
+[DBLP search API](https://dblp.org/faq/How%2Bto%2Buse%2Bthe%2Bdblp%2Bsearch%2BAPI.html)
+for computer-science metadata, [Citesurely](https://citesurely.com/) for a manual
+field comparison, or
+[CiteScanning](https://www.modelscope.cn/studios/aivolcano/CiteScanning/summary)
+as a manual or self-hosted multi-source check. None is a required dependency.
+Results are reported as `verified`, `likely match`, `ambiguous`, `not found`, or
+`conflicting metadata`. Not found is not treated as proof of a fabricated
+reference, and metadata existence is not treated as proof that a source supports a
+claim. Claim-support auditing is a separate, explicit request; an excerpt without
+its Results section is not evidence that the full manuscript lacks support.
 
 ## Install
 
@@ -162,6 +210,7 @@ weakening supported claims.
 - [Clean a passage](prompts/quick-prompt.txt)
 - [Audit without a full rewrite](prompts/audit-prompt.txt)
 - [Clean a complete manuscript](prompts/full-manuscript-prompt.txt)
+- [Audit manuscript integrity](prompts/integrity-prompt.txt)
 
 These are task entry points, not separate policy implementations. The repository
 checks that they retain the same evidence-integrity rules as the Skill.
@@ -178,11 +227,14 @@ anti-ai-defensive-writing/
 │   ├── SKILL.md
 │   ├── agents/openai.yaml
 │   ├── references/
-│   └── scripts/check_academic_rewrite.py
+│   └── scripts/
+│       ├── check_academic_rewrite.py
+│       └── check_manuscript_integrity.py
 ├── prompts/
 │   ├── quick-prompt.txt
 │   ├── audit-prompt.txt
-│   └── full-manuscript-prompt.txt
+│   ├── full-manuscript-prompt.txt
+│   └── integrity-prompt.txt
 ├── evals/cases.md
 ├── tests/
 ├── scripts/check_policy_sync.py
@@ -196,7 +248,9 @@ anti-ai-defensive-writing/
 
 This skill does not perform statistical analysis, replace peer review, or justify
 claims unsupported by evidence. It preserves legitimate uncertainty, technical
-terms, and venue requirements. It removes model-added noise and unsupported rigor.
+terms, and venue requirements. It does not upload private bibliographies, silently
+renumber displays, replace records, or declare citations hallucinated from a failed
+metadata search. It removes model-added noise and unsupported rigor.
 
 ## Contributing
 
@@ -211,17 +265,6 @@ python3 -m unittest discover -s tests -v
 python3 scripts/check_policy_sync.py
 npm pack --dry-run
 ```
-
-## Acknowledgements
-
-This project benefits from ideas explored across the open-source writing-tool
-community, including the emphasis on preservation checks and false-positive
-reporting in [avoid-ai-writing](https://github.com/conorbronsdon/avoid-ai-writing).
-The one-command distribution and whole-manuscript entry-point ideas were also
-informed by [Academic Defensive Writing Auditor](https://github.com/Worigin0314/academic-defensive-writing-auditor).
-This repository's installer, evidence ledger, policy, examples, evaluation cases,
-and checker were designed and implemented independently for evidence-sensitive
-academic revision.
 
 ## License
 

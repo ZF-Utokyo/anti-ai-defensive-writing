@@ -1,0 +1,35 @@
+Use $anti-ai-defensive-writing to run the optional Manuscript Integrity Audit on
+this academic manuscript. Do not rewrite the prose unless I explicitly ask for
+repairs.
+
+Check that every figure and table is cited, labels and references resolve, figure
+and table first-citation order matches their numbering, captions and panel
+references are usable, and hard-coded display numbers do not create fragile links.
+Check LaTeX citation keys against the supplied BibTeX files, duplicate or unused
+entries, common missing metadata, and malformed DOI or URL fields.
+
+Build an internal terminology ledger with each canonical term, abbreviation, first
+definition, variants, and intentional distinctions. Check the abstract and main
+text as separate reading units when appropriate, then check captions, tables,
+appendices, and supplementary material. Do not merge genuinely distinct concepts
+or vary a technical term merely to avoid repetition.
+
+Run deterministic local checks before external verification. Use external metadata
+services only when I request network verification. Treat their results as
+verified, likely match, ambiguous, not found, or conflicting metadata. Do not treat
+not found as proof of a hallucinated reference, upload private bibliography data
+without permission, or automatically replace BibTeX records. Bibliographic
+existence does not prove that a citation supports a claim. Do not audit empirical
+claim support unless I explicitly request it, and do not treat evidence omitted
+from an excerpt as evidence that the full manuscript lacks.
+
+Preserve all supplied facts, numbers, citations, equations, scope conditions, and
+venue requirements. Unsupported interpretations, evaluative labels, and
+disclaimers are not facts merely because they appear in the draft. Never invent
+data, confidence intervals, tests, experiments, citations, or methodological
+details. Do not add em dashes. Preserve the strongest claim the evidence supports.
+
+Report only actionable findings with severity, source location, evidence, and the
+smallest repair. Do not assign an integrity score or predict reviewer reactions.
+Finish with one integrity pass confirming that proposed repairs introduce no
+unsupported evidence or terminology changes.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check that the Skill and quick prompt retain the same core policy invariants."""
+"""Check that the Skill and prompt entry points retain core policy invariants."""
 
 from pathlib import Path
 import re
@@ -12,6 +12,7 @@ DOCUMENTS = {
     "clean-prompt": ROOT / "prompts" / "quick-prompt.txt",
     "audit-prompt": ROOT / "prompts" / "audit-prompt.txt",
     "full-manuscript-prompt": ROOT / "prompts" / "full-manuscript-prompt.txt",
+    "integrity-prompt": ROOT / "prompts" / "integrity-prompt.txt",
 }
 
 INVARIANTS = {

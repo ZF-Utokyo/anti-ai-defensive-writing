@@ -6,8 +6,10 @@ description: >
   gratuitous em dashes or italics, opaque abstraction, and claims weakened below
   what the evidence supports. Use for cleaning AI-generated abstracts, papers,
   methods, results, captions, tables, conclusions, and rebuttals while preserving
-  facts and legitimate uncertainty. Do not use this skill to conduct statistical
-  analysis or peer review itself.
+  facts and legitimate uncertainty, or for optional manuscript-integrity audits of
+  LaTeX cross-references, figure and table order, BibTeX records, acronyms, and
+  terminology. Do not use this skill to conduct statistical analysis or peer
+  review itself.
 ---
 
 # Anti AI-Defensive Writing Skill
@@ -41,6 +43,8 @@ the reader understand the work.
   the author's meaning and structure unless restructuring is requested.
 - **Audit:** Identify defensive or synthetic AI artifacts and propose repairs
   without rewriting the full passage.
+- **Integrity (opt-in):** Audit manuscript structure, bibliography metadata, and
+  terminology without rewriting prose or silently changing records.
 
 Infer the mode from the request. Ask only when different modes would produce
 materially different deliverables.
@@ -54,6 +58,14 @@ When the supplied material spans multiple manuscript sections, also read
 [whole-manuscript-workflow.md](references/whole-manuscript-workflow.md). Build its
 claim-to-evidence ledger internally, reconcile repeated caveats by meaning, and run
 the final integrity pass across section boundaries.
+
+When the user explicitly asks about figure or table citations, reference order,
+LaTeX labels, BibTeX validity, citation existence, acronym definitions, or
+terminology consistency, read
+[manuscript-integrity.md](references/manuscript-integrity.md). Keep that optional
+audit separate from ordinary prose cleanup. Run deterministic local checks before
+semantic or external checks, and never treat a metadata search result as proof
+that a cited work supports a claim.
 
 ## Apply the four tests
 
@@ -75,13 +87,14 @@ only as an explicit proposal, never as completed work.
 Assign the highest applicable severity and resolve higher-severity problems first:
 
 - **P0, evidence integrity:** changed or invented numbers, uncertainty, citations,
-  equations, metrics, probes, experiments, conditions, or claim scope. Never trade
-  evidence integrity for cleaner style.
+  equations, metrics, probes, experiments, conditions, or claim scope; unresolved
+  references or conflicting keys in Integrity mode. Never trade evidence integrity
+  for cleaner style.
 - **P1, analytical defensiveness:** reflexive caveats, unsupported interpretations,
-  claim paralysis, vague abstraction, reviewer voice, or unnecessary analytical
-  commitments.
+  claim paralysis, vague abstraction, reviewer voice, unnecessary analytical
+  commitments, or structural and terminology ambiguities.
 - **P2, presentation residue:** gratuitous em dashes, italics, bold text,
-  parentheticals, table decoration, or other formatting that adds no meaning.
+  parentheticals, table decoration, unused records, or other nonblocking cleanup.
 
 In Audit mode, report this severity with each consequential finding. Do not label a
 defined technical term or explicit style choice as a problem merely because it
@@ -157,6 +170,16 @@ Treat P0 errors as blocking. Inspect P1 warnings in context. Use
 explicitly authorizes that change. Use `--allow-drop-number VALUE` only for a value
 the user has explicitly quarantined as an unsupported draft artifact.
 
+For a LaTeX manuscript-integrity request, run the second bundled checker:
+
+    python3 scripts/check_manuscript_integrity.py main.tex
+
+It follows static includes and checks local labels, references, display order,
+BibTeX keys and common metadata, hard-coded display numbers, and acronym use. Treat
+its findings as source-located leads, not automatic edits. Use the JSON option for
+structured output and consult the manuscript-integrity reference for external
+verification and terminology decisions.
+
 ## Output contract
 
 For Draft or Clean mode:
@@ -171,6 +194,14 @@ For Audit mode, report each consequential finding as: severity, artifact, why it
 a problem here, and the smallest useful repair. Do not flag a harmless pattern
 merely because it resembles a common AI habit. Do not assign a paper-level
 defensiveness score or predict reviewer reactions.
+
+For Integrity mode, report severity, source location, observed evidence, and the
+smallest repair. Do not rewrite, renumber, replace bibliography records, upload
+private files, or query external services unless the user requests the relevant
+action. Report a missing external result as unresolved evidence, not as a
+hallucinated citation. Stay within the requested audit surfaces. Do not infer that
+a claim lacks evidence merely because the user supplied an excerpt, and do not
+start a claim-support audit unless requested.
 
 ## Final check
 

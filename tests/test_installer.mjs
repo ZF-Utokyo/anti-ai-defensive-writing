@@ -40,6 +40,14 @@ test("custom directory install copies only the Skill package", (t) => {
   assert.equal(result.status, 0, result.stderr);
   assert.equal(fs.existsSync(path.join(target, "SKILL.md")), true);
   assert.equal(fs.existsSync(path.join(target, "agents", "openai.yaml")), true);
+  assert.equal(
+    fs.existsSync(path.join(target, "scripts", "check_manuscript_integrity.py")),
+    true
+  );
+  assert.equal(
+    fs.existsSync(path.join(target, "references", "manuscript-integrity.md")),
+    true
+  );
   assert.equal(fs.existsSync(path.join(target, "README.md")), false);
 });
 

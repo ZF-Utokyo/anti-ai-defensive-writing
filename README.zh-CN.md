@@ -4,6 +4,8 @@
 
 这是一个面向学术写作的英文 Skill，用来清理 AI 自动加入的防御性表达、
 伪严谨分析、抽象难懂的句子和无意义格式，同时保护论文中的真实证据。
+它还提供可选的论文完整性审计，用来检查 LaTeX 引用、图表顺序、BibTeX、
+缩写定义和全文术语一致性。
 
 > 保留证据，删除虚构的严谨，写出证据能够支持的最强结论。
 
@@ -71,17 +73,49 @@ claim-to-evidence ledger, remove duplicated defensive caveats, and run a global
 integrity pass.
 ```
 
+只做论文完整性审计：
+
+```text
+Use $anti-ai-defensive-writing to audit manuscript integrity. Check figure and
+table citations, LaTeX references, BibTeX records, acronym definitions, and
+terminology consistency without rewriting the prose.
+```
+
 可直接复用的英文入口：
 
 - [普通清理](prompts/quick-prompt.txt)
 - [仅审查](prompts/audit-prompt.txt)
 - [全文清理](prompts/full-manuscript-prompt.txt)
+- [论文完整性审计](prompts/integrity-prompt.txt)
+
+## 论文完整性审计
+
+对 LaTeX 项目运行本地只读检查：
+
+```bash
+python3 skills/anti-ai-defensive-writing/scripts/check_manuscript_integrity.py \
+  main.tex
+```
+
+它会检查未解析或重复的 label/citation key、没有正文引用或引用顺序异常的
+Figure/Table、常见 BibTeX 字段与 DOI/URL 问题，以及缩写首次定义和大小写。
+脚本不会联网，也不会自动修改论文。
+
+外部文献核验是可选步骤：计算机科学文献可查
+[DBLP](https://dblp.org/)，也可以人工使用
+[Citesurely](https://citesurely.com/) 或
+[CiteScanning](https://www.modelscope.cn/studios/aivolcano/CiteScanning/summary)
+交叉核对。查不到只能标记为未确认，不能直接判定为 AI 虚构；查到元数据也
+不能证明该论文支持正文中的具体 claim。只有用户明确要求时才审查 citation
+是否支持 claim；不能因为当前只提供了摘要或引言，就判断完整论文缺少证据。
 
 ## 问题分级
 
-- **P0，证据完整性：** 数字、引用、公式、指标、实验、条件或结论范围被修改或虚构。
-- **P1，分析性防御：** 机械免责声明、无来源解释、结论瘫软、审稿人口吻或空洞抽象。
-- **P2，展示残留：** 无意义的破折号、斜体、粗体、括号和表格装饰。
+- **P0，证据完整性：** 数字、引用、公式、指标、实验、条件或结论范围被修改或虚构，
+  或者存在未解析引用与冲突 key。
+- **P1，分析或结构问题：** 机械免责声明、无来源解释、结论瘫软、审稿人口吻、
+  空洞抽象、结构歧义或术语歧义。
+- **P2，非阻塞清理：** 无意义的破折号、斜体、粗体、括号、表格装饰或未使用记录。
 
 P0 永远优先于风格。为了让句子更顺而损坏证据，属于失败的修改。
 

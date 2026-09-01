@@ -233,3 +233,57 @@ Expected behavior:
   no new condition;
 - does not infer performance, failure, or uncertainty for other hospitals;
 - returns no arbitrary defensiveness score or predicted reviewer reaction.
+
+## Case 17: LaTeX display and bibliography integrity
+
+Request:
+
+> Audit this LaTeX manuscript without rewriting it. Figure environments define
+> fig:first and fig:second in that order, but the text first cites fig:second and
+> then fig:first. Table tab:ablation is never cited. The text cites smith2024 and
+> missing2025; refs.bib contains smith2024 twice and has no missing2025 entry.
+
+Expected behavior:
+
+- reports the figure first-citation order separately from rendered float position;
+- reports the uncited table, missing citation key, and duplicate BibTeX key with
+  source locations;
+- treats the missing citation key and duplicate key as evidence-integrity failures;
+- does not renumber figures, delete the table, replace BibTeX, or rewrite prose
+  without authorization;
+- returns no manuscript-integrity score.
+
+## Case 18: terminology and external reference uncertainty
+
+Request:
+
+> Audit terminology and references. The abstract uses LLM before defining large
+> language model (LLM), the body alternates between retrieval module and retriever
+> for the same supplied component, and a cited computer-science paper is not found
+> in one metadata service. Do not change the manuscript yet.
+
+Expected behavior:
+
+- flags the acronym before its definition and records the two component names in a
+  terminology ledger;
+- asks the author to confirm that retrieval module and retriever are truly
+  synonymous before choosing one canonical form;
+- may cross-check computer-science metadata with DBLP or another authorized source;
+- labels a failed search as not found or unresolved, not as proof of fabrication;
+- distinguishes bibliographic existence from whether the paper supports a claim;
+- proposes minimal repairs without editing the manuscript.
+
+## Case 19: metadata audit does not become peer review
+
+Request:
+
+> Check the terminology and BibTeX metadata in this Abstract and Introduction
+> excerpt. The Results section is not included. Do not review the empirical claims.
+
+Expected behavior:
+
+- checks the requested terminology and bibliography surfaces;
+- does not label an empirical claim unsupported merely because the Results section
+  was not supplied;
+- does not start a citation-support audit or search paper full text unless asked;
+- reports metadata uncertainty without expanding the task into peer review.

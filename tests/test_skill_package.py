@@ -45,11 +45,23 @@ class SkillPackageChecks(unittest.TestCase):
         self.assertIn("evidence ledger", workflow.lower())
         self.assertIn("Do not add a paper-level defensiveness score", workflow)
 
+    def test_manuscript_integrity_reference_is_routed_from_skill(self):
+        text = SKILL_FILE.read_text(encoding="utf-8")
+        self.assertIn("references/manuscript-integrity.md", text)
+        workflow = SKILL_DIR.joinpath(
+            "references", "manuscript-integrity.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("first meaningful in-text citation", workflow)
+        self.assertIn("A missing result is not proof", workflow)
+        self.assertIn("terminology ledger", workflow.lower())
+        self.assertIn("Do not start a claim-support audit unless", workflow)
+
     def test_repository_prompt_entry_points_exist(self):
         prompt_names = {
             "quick-prompt.txt",
             "audit-prompt.txt",
             "full-manuscript-prompt.txt",
+            "integrity-prompt.txt",
         }
         prompt_directory = ROOT / "prompts"
         self.assertEqual(
@@ -60,10 +72,18 @@ class SkillPackageChecks(unittest.TestCase):
     def test_npm_manifest_installs_the_skill(self):
         manifest = json.loads(ROOT.joinpath("package.json").read_text(encoding="utf-8"))
         self.assertEqual("anti-ai-defensive-writing", manifest["name"])
+        self.assertEqual("0.2.0", manifest["version"])
         self.assertEqual("bin/install.mjs", manifest["bin"]["anti-ai-defensive-writing"])
         self.assertIn("skills/anti-ai-defensive-writing", manifest["files"])
         self.assertIn("prompts", manifest["files"])
         self.assertNotIn("dependencies", manifest)
+
+    def test_integrity_checker_is_packaged(self):
+        checker = SKILL_DIR / "scripts" / "check_manuscript_integrity.py"
+        self.assertTrue(checker.is_file())
+        source = checker.read_text(encoding="utf-8")
+        self.assertIn("check_manuscript", source)
+        self.assertNotRegex(source, r"(?m)^(?:from|import) (?:requests|httpx|urllib)")
 
     def test_repository_readme_links_exist(self):
         for readme in (ROOT / "README.md", ROOT / "README.zh-CN.md"):

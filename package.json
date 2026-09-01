@@ -1,7 +1,7 @@
 {
   "name": "anti-ai-defensive-writing",
-  "version": "0.1.0",
-  "description": "Install an evidence-preserving Skill for cleaning AI-defensive academic writing.",
+  "version": "0.2.0",
+  "description": "Install an evidence-preserving Skill for academic prose and manuscript integrity audits.",
   "type": "module",
   "license": "MIT",
   "bin": {
@@ -34,7 +34,9 @@
   "keywords": [
     "academic-writing",
     "ai-writing",
+    "bibtex",
     "codex-skill",
+    "latex",
     "research-tools",
     "prompt-engineering"
   ]

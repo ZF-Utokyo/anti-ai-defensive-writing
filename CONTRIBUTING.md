@@ -1,7 +1,7 @@
 # Contributing
 
 Contributions are welcome, especially realistic examples of AI-defensive academic
-writing that the current Skill handles poorly.
+writing or manuscript-integrity failures that the current Skill handles poorly.
 
 ## A useful contribution
 
@@ -10,6 +10,11 @@ writing that the current Skill handles poorly.
 3. Change the narrowest instruction that fixes the demonstrated failure.
 4. Check that the change does not remove valid evidence, terminology, uncertainty,
    venue requirements, or explicit user style choices.
+
+For integrity checks, distinguish a deterministic failure such as an unresolved
+label from a semantic judgment such as whether two terms are genuinely synonymous.
+External metadata mismatches need the compared fields and source link; a failed
+search alone is not evidence of a hallucinated citation.
 
 Avoid expanding a blacklist whenever a provenance or relevance rule would handle
 the same failure more generally.
