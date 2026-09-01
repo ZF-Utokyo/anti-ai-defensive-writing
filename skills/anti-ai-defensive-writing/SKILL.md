@@ -10,7 +10,7 @@ description: >
   analysis or peer review itself.
 ---
 
-# Anti AI-Defensive Writing
+# Anti AI-Defensive Writing Skill
 
 Produce direct, evidence-aligned academic prose. Remove AI additions that create
 analytical commitments, reviewer attack surfaces, or visual noise without helping

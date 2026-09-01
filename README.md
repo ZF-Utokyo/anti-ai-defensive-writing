@@ -1,4 +1,4 @@
-# Anti AI-Defensive Writing
+# Anti AI-Defensive Writing Skill
 
 An English, zero-dependency AI skill for removing unrequested caveats, faux rigor,
 opaque abstraction, and formatting residue from academic writing without weakening
