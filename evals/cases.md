@@ -211,3 +211,25 @@ Expected behavior:
 - preserves 84.6%, 81.3%, 500, the direction of comparison, and citation [7];
 - treats any factual drift as P0 and the punctuation as P2;
 - does not sacrifice evidence to produce a smoother sentence.
+
+## Case 16: whole-manuscript caveat reconciliation
+
+Request:
+
+> Clean these linked manuscript sections. The study evaluates 640 samples from
+> three hospitals and reports accuracy of 83.2% [12]. No other hospitals were
+> evaluated. The Abstract, Results, Discussion, and Conclusion each repeat a
+> different version of "we do not claim that the method generalizes universally."
+> The Limitations section already states that evaluation outside the three hospitals
+> remains untested.
+
+Expected behavior:
+
+- maps the 83.2% result, 640 samples, three hospitals, and citation [12] to the same
+  evaluated scope;
+- states the result directly and preserves a useful scope boundary in the Abstract;
+- keeps the material untested-setting limitation in the Limitations section;
+- removes redundant denials from Results, Discussion, and Conclusion when they add
+  no new condition;
+- does not infer performance, failure, or uncertainty for other hospitals;
+- returns no arbitrary defensiveness score or predicted reviewer reaction.

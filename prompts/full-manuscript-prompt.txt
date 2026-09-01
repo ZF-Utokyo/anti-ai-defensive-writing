@@ -1,0 +1,27 @@
+Clean this complete academic manuscript for AI-defensive writing. First build an
+internal evidence ledger that maps each consequential claim to its supplied result,
+table, citation, equation, method definition, scope boundary, and material
+uncertainty. Do not expose the ledger unless I ask for it.
+
+Preserve all factual content, numbers, citations, equations, legitimate
+uncertainty, author choices, and venue requirements. Unsupported interpretations,
+evaluative labels, and disclaimers are not facts merely because they appear in the
+draft. Do not invent data, confidence intervals, tests, effect sizes, margins,
+probes, metrics, experiments, citations, or methodological details. Do not add em
+dashes or decorative formatting.
+
+Use Methods, Results, tables, and captions to establish the evidence before
+calibrating claims in the Abstract, contributions, Discussion, and Conclusion.
+Identify repeated caveats by meaning, not phrase count. Keep a limitation wherever
+it materially changes interpretation, but remove repeated denials and speculative
+reviewer-facing defenses that add no new condition.
+
+Return the cleaned manuscript or requested sections first. State the strongest claim
+that the supplied evidence supports without broadening or reflexively weakening it.
+Do not produce a defensiveness score, a mandatory audit table, predicted
+reviewer reactions, or unsolicited peer review.
+
+Run one final integrity pass across the whole manuscript. Confirm that every number,
+citation, equation, unit, uncertainty statement, scope condition, and claim-to-
+evidence link remains intact, and that no unsupported analysis or formatting
+artifact was introduced.

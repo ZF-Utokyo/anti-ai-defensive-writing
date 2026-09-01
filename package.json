@@ -1,0 +1,41 @@
+{
+  "name": "anti-ai-defensive-writing",
+  "version": "0.1.0",
+  "description": "Install an evidence-preserving Skill for cleaning AI-defensive academic writing.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "anti-ai-defensive-writing": "bin/install.mjs"
+  },
+  "files": [
+    "bin/install.mjs",
+    "skills/anti-ai-defensive-writing",
+    "prompts",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test tests/test_installer.mjs && python3 -m unittest discover -s tests -q && python3 scripts/check_policy_sync.py",
+    "test:installer": "node --test tests/test_installer.mjs",
+    "pack:dry": "npm pack --dry-run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZF-Utokyo/anti-ai-defensive-writing.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ZF-Utokyo/anti-ai-defensive-writing/issues"
+  },
+  "homepage": "https://github.com/ZF-Utokyo/anti-ai-defensive-writing#readme",
+  "keywords": [
+    "academic-writing",
+    "ai-writing",
+    "codex-skill",
+    "research-tools",
+    "prompt-engineering"
+  ]
+}

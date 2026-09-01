@@ -9,7 +9,9 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 DOCUMENTS = {
     "skill": ROOT / "skills" / "anti-ai-defensive-writing" / "SKILL.md",
-    "prompt": ROOT / "prompts" / "quick-prompt.txt",
+    "clean-prompt": ROOT / "prompts" / "quick-prompt.txt",
+    "audit-prompt": ROOT / "prompts" / "audit-prompt.txt",
+    "full-manuscript-prompt": ROOT / "prompts" / "full-manuscript-prompt.txt",
 }
 
 INVARIANTS = {

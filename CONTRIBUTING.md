@@ -24,8 +24,10 @@ venue rule, or author preference that should protect it.
 Run:
 
 ```bash
-python -m unittest discover -s tests -v
-python scripts/check_policy_sync.py
+node --test tests/test_installer.mjs
+python3 -m unittest discover -s tests -v
+python3 scripts/check_policy_sync.py
+npm pack --dry-run
 ```
 
 Validate the Skill structure with the `quick_validate.py` script distributed with

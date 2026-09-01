@@ -1,5 +1,7 @@
 # Anti AI-Defensive Writing Skill
 
+**English** · [简体中文快速上手](README.zh-CN.md)
+
 An English, zero-dependency AI skill for removing unrequested caveats, faux rigor,
 opaque abstraction, and formatting residue from academic writing without weakening
 claims that the evidence supports.
@@ -75,6 +77,12 @@ The Skill adapts those modes to the academic context: abstract and introduction,
 methods, results, tables and captions, discussion and conclusion, or rebuttal and
 review response.
 
+For complete manuscripts, it builds an internal evidence ledger before editing:
+claims map to supplied results, tables, citations, equations, methods, scope, and
+material uncertainty. It then removes cross-section caveat duplication by meaning,
+not by phrase count. The ledger is not a style score and is not returned unless the
+user requests it.
+
 ## Severity model
 
 Problems are ordered by consequence:
@@ -116,7 +124,25 @@ those changes. When the author explicitly identifies a number as a fabricated or
 unsourced draft artifact, pass `--allow-drop-number VALUE` once for each permitted
 deletion. All other numeric drift remains a P0 error.
 
-## Use it as a Skill
+## Install
+
+Install the Skill directly from GitHub:
+
+```bash
+npx --yes github:ZF-Utokyo/anti-ai-defensive-writing --agent codex
+```
+
+Inspect the resolved target without writing files:
+
+```bash
+npx --yes github:ZF-Utokyo/anti-ai-defensive-writing --agent codex --dry-run
+```
+
+Supported destinations are `codex`, `claude`, and `project`. Use `--dir PATH` to
+select another parent directory. Existing installations are refused by default;
+`--force` moves the old installation to a timestamped backup before replacing it.
+
+Manual installation remains available:
 
 Copy the Skill directory into your agent's Skill directory. For Codex:
 
@@ -131,8 +157,14 @@ Use $anti-ai-defensive-writing to clean this abstract without adding statistics 
 weakening supported claims.
 ```
 
-For other AI tools, copy [`prompts/quick-prompt.txt`](prompts/quick-prompt.txt) into
-the beginning of a conversation.
+## Ready-to-use prompts
+
+- [Clean a passage](prompts/quick-prompt.txt)
+- [Audit without a full rewrite](prompts/audit-prompt.txt)
+- [Clean a complete manuscript](prompts/full-manuscript-prompt.txt)
+
+These are task entry points, not separate policy implementations. The repository
+checks that they retain the same evidence-integrity rules as the Skill.
 
 ## Repository structure
 
@@ -141,15 +173,21 @@ anti-ai-defensive-writing/
 ├── .github/
 │   ├── ISSUE_TEMPLATE/false-positive.yml
 │   └── workflows/test.yml
+├── bin/install.mjs
 ├── skills/anti-ai-defensive-writing/
 │   ├── SKILL.md
 │   ├── agents/openai.yaml
 │   ├── references/
 │   └── scripts/check_academic_rewrite.py
-├── prompts/quick-prompt.txt
+├── prompts/
+│   ├── quick-prompt.txt
+│   ├── audit-prompt.txt
+│   └── full-manuscript-prompt.txt
 ├── evals/cases.md
 ├── tests/
 ├── scripts/check_policy_sync.py
+├── README.zh-CN.md
+├── package.json
 ├── CONTRIBUTING.md
 └── LICENSE
 ```
@@ -168,8 +206,10 @@ case and an observable expected behavior. See [CONTRIBUTING.md](CONTRIBUTING.md)
 Run the deterministic checks with:
 
 ```bash
-python -m unittest discover -s tests -v
-python scripts/check_policy_sync.py
+node --test tests/test_installer.mjs
+python3 -m unittest discover -s tests -v
+python3 scripts/check_policy_sync.py
+npm pack --dry-run
 ```
 
 ## Acknowledgements
@@ -177,8 +217,10 @@ python scripts/check_policy_sync.py
 This project benefits from ideas explored across the open-source writing-tool
 community, including the emphasis on preservation checks and false-positive
 reporting in [avoid-ai-writing](https://github.com/conorbronsdon/avoid-ai-writing).
-The policy, academic context model, examples, evaluation cases, and checker in this
-repository were designed and implemented independently for evidence-sensitive
+The one-command distribution and whole-manuscript entry-point ideas were also
+informed by [Academic Defensive Writing Auditor](https://github.com/Worigin0314/academic-defensive-writing-auditor).
+This repository's installer, evidence ledger, policy, examples, evaluation cases,
+and checker were designed and implemented independently for evidence-sensitive
 academic revision.
 
 ## License

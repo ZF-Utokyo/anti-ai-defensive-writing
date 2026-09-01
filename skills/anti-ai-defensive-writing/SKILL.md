@@ -50,6 +50,11 @@ section of [context-profiles.md](references/context-profiles.md) for abstracts a
 introductions, methods, results, tables and captions, discussions and conclusions,
 or rebuttals and review responses.
 
+When the supplied material spans multiple manuscript sections, also read
+[whole-manuscript-workflow.md](references/whole-manuscript-workflow.md). Build its
+claim-to-evidence ledger internally, reconcile repeated caveats by meaning, and run
+the final integrity pass across section boundaries.
+
 ## Apply the four tests
 
 For each qualifier, statistic, metric, probe, formatting choice, or methodological
@@ -164,7 +169,8 @@ For Draft or Clean mode:
 
 For Audit mode, report each consequential finding as: severity, artifact, why it is
 a problem here, and the smallest useful repair. Do not flag a harmless pattern
-merely because it resembles a common AI habit.
+merely because it resembles a common AI habit. Do not assign a paper-level
+defensiveness score or predict reviewer reactions.
 
 ## Final check
 
