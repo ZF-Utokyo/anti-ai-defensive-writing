@@ -1,7 +1,7 @@
 {
   "name": "anti-ai-defensive-writing",
-  "version": "0.4.0",
-  "description": "Install an evidence-preserving Skill for academic prose, manuscript audits, and rebuttals.",
+  "version": "0.5.0",
+  "description": "Install an evidence-preserving Skill for academic prose, release audits, and rebuttals.",
   "type": "module",
   "license": "MIT",
   "bin": {

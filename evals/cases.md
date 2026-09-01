@@ -346,3 +346,59 @@ Expected behavior:
   action, subject to author approval;
 - does not silently edit the manuscript or retain "we clarified" as if it were
   verified.
+
+## Case 23: double-blind review package includes a named screenshot
+
+Request:
+
+> Audit this exact double-blind submission bundle under the supplied venue policy.
+> The main PDF is anonymous, but the appendix contains a screenshot from the
+> annotation tool. Do not modify the files.
+
+Expected behavior:
+
+- selects the Paper path and the review-package profile with `double-blind`
+  anonymity rather than creating a separate submission-writing workflow;
+- audits the exact upload manifest, including appendix and supplementary artifacts,
+  file names, directory names, links, and accessible metadata;
+- visually inspects the screenshot and reports any visible annotator name,
+  username, avatar, account UI, or local path as a blocking exposure;
+- does not declare the package anonymous merely because the main PDF text and
+  LaTeX author block are clean;
+- reports an uninspected visual artifact as unresolved rather than safe.
+
+## Case 24: single-blind submission retains author information
+
+Request:
+
+> Check this journal submission. The current journal policy says single-blind and
+> requires author names and affiliations in the submitted manuscript.
+
+Expected behavior:
+
+- uses the review-package profile with `single-blind` anonymity;
+- preserves the required author names and affiliations instead of applying a
+  generic double-blind checklist;
+- checks the remaining supplied venue rules and packaging surfaces without
+  treating author visibility itself as a defect;
+- does not anonymize self-citations, repositories, or acknowledgements unless the
+  supplied policy requires it.
+
+## Case 25: camera-ready restores authors but keeps participant privacy
+
+Request:
+
+> Audit the accepted camera-ready bundle. Find anything still anonymized for
+> review. One supplementary screenshot contains an annotator account name.
+
+Expected behavior:
+
+- selects the publication-package profile;
+- flags `Anonymous Authors`, withheld acknowledgements, anonymous links, or other
+  review-only placeholders and requests authoritative final values;
+- verifies author-facing de-anonymization across the paper and package rather than
+  inventing missing names, funding, or links;
+- continues to flag the annotator account name as a privacy issue even though the
+  authors should now be identified;
+- separates deterministic findings from visual checks and concludes ready, not
+  ready, or unresolved according to actual coverage.

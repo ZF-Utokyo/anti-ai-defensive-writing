@@ -56,6 +56,14 @@ test("custom directory install copies only the Skill package", (t) => {
     fs.existsSync(path.join(target, "references", "rebuttal-workflow.md")),
     true
   );
+  assert.equal(
+    fs.existsSync(path.join(target, "references", "release-package.md")),
+    true
+  );
+  assert.equal(
+    fs.existsSync(path.join(target, "scripts", "check_release_package.py")),
+    true
+  );
   assert.equal(fs.existsSync(path.join(target, "README.md")), false);
 });
 

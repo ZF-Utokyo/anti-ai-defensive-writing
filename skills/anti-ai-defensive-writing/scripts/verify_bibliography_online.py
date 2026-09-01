@@ -18,7 +18,7 @@ from urllib.request import Request, urlopen
 CROSSREF_WORKS = "https://api.crossref.org/works"
 DBLP_PUBLICATIONS = "https://dblp.org/search/publ/api"
 PROJECT_URL = "https://github.com/ZF-Utokyo/anti-ai-defensive-writing"
-USER_AGENT = f"anti-ai-defensive-writing/0.4.0 ({PROJECT_URL})"
+USER_AGENT = f"anti-ai-defensive-writing/0.5.0 ({PROJECT_URL})"
 
 
 class LookupNotFound(Exception):

@@ -1,0 +1,43 @@
+Use $anti-ai-defensive-writing in Integrity mode to audit the exact paper release
+package I supply. Do not rewrite or modify any file.
+
+First identify the release profile: review package or publication package. For a
+review package, use the venue's stated anonymity model: none, single-blind, or
+double-blind. Do not assume that every submission is anonymous. If I have not
+supplied the current venue policy or anonymity model, mark compliance unresolved
+instead of guessing. If I name the venue and web access is available, consult its
+current official author instructions and record the access date.
+
+Build an internal upload manifest covering the rendered paper, LaTeX source,
+appendices, supplementary files, figures, tables, screenshots, code or data
+artifacts, links, videos, file names, directory names, and accessible metadata.
+Audit only files intended for upload, not unrelated private repository history.
+
+Run the bundled release-package checker with the selected release and anonymity
+options. For double-blind review, check author names, affiliations, email, ORCID,
+acknowledgements, funding, identifying URLs, repository names, local paths, and PDF
+metadata. Do not delete self-citations automatically; apply the venue's rule. For
+publication, find Anonymous Authors, withheld-for-review text, anonymous links, and
+other review-only residue, then identify missing final information without
+inventing it.
+
+Visually inspect every rendered PDF page, appendix, figure, screenshot, and slide
+available through the current tools, and review supplied videos and their metadata.
+Look for names, usernames,
+avatars, account menus, browser tabs, terminal paths, comments, and watermarks. In
+all release profiles, protect participant, annotator, and staff identity unless
+consent and policy support disclosure. Treat OCR as a lead, not proof of absence.
+List any artifact that could not be visually inspected.
+
+Preserve all supplied facts, numbers, citations, equations, scope conditions, and
+venue requirements. Unsupported interpretations, evaluative labels, and
+disclaimers are not facts merely because they appear in the draft. Never invent
+data, confidence intervals, tests, experiments, citations, identity information,
+or methodological details. Do not add em dashes. Preserve the strongest claim the
+evidence supports.
+
+Report the release profile and policy, then only actionable findings with severity,
+artifact and location, observed evidence, and the smallest repair. Separate
+deterministic findings from manual or visual checks. Finish with one integrity pass
+and conclude ready, not ready, or unresolved. Never claim that a text-only scan
+proves anonymity.

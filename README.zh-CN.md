@@ -5,8 +5,8 @@
 这是一个面向学术写作的英文 Skill，用来清理 AI 自动加入的防御性表达、
 伪严谨分析、抽象难懂的句子和无意义格式，同时保护论文中的真实证据。
 它还提供可选的论文完整性审计，用来检查 LaTeX 引用、图表顺序、BibTeX、
-缩写定义和全文术语一致性，并提供基于论文证据撰写 rebuttal 和 reviewer
-response 的独立工作流。
+缩写定义和全文术语一致性；可以审计 review package 的匿名风险和 camera-ready
+的身份恢复；并提供基于论文证据撰写 rebuttal 和 reviewer response 的独立工作流。
 
 > 保留证据，删除虚构的严谨，写出证据能够支持的最强结论。
 
@@ -99,6 +99,15 @@ manuscript. Answer each concern with existing evidence and an exact location.
 Do not promise new work unless I have approved it.
 ```
 
+检查双盲投稿包，包括附录和截图：
+
+```text
+Use $anti-ai-defensive-writing in Integrity mode to audit the exact upload package.
+This is a double-blind review submission. Apply the supplied venue policy, run the
+release checker, and visually inspect every PDF page, figure, and screenshot. Do
+not modify my files or claim anonymity for anything you could not inspect.
+```
+
 可直接复用的英文入口：
 
 - [普通清理](prompts/quick-prompt.txt)
@@ -106,6 +115,7 @@ Do not promise new work unless I have approved it.
 - [全文清理](prompts/full-manuscript-prompt.txt)
 - [论文完整性审计](prompts/integrity-prompt.txt)
 - [Rebuttal 与 reviewer response](prompts/rebuttal-prompt.txt)
+- [Review / publication package 审计](prompts/release-audit-prompt.txt)
 
 ## Skill 和 Checker 的区别
 
@@ -116,22 +126,29 @@ Skill 只有两条任务路径：
 | Paper | 写作、清理或检查论文正文、证据、结构和参考文献 |
 | Rebuttal | 把 reviewer comment 映射到现有证据、准确位置和作者批准的行动 |
 
-Submission、revision 和 camera-ready 都属于 Paper。它们的 venue 要求可能不同，
-但处理论文证据的方式相同。Rebuttal 单独处理，因为它的主要产物是对 reviewer
+Paper 内部只有两个 release profile：
+
+| Release profile | 包含阶段 | 身份规则 |
+| --- | --- | --- |
+| Review package | Submission、revision、resubmission | 根据 venue 明确选择 `none`、`single-blind` 或 `double-blind` |
+| Publication package | Accepted、camera-ready | 恢复经过确认的作者信息，清理 review 阶段占位符 |
+
+“Submission”本身不代表匿名。Rebuttal 单独处理，因为它的主要产物是对 reviewer
 comment 的回复，而不是论文正文。
 
-这个项目还为 Paper 路径提供两个确定性安全网：
+这个项目还为 Paper 路径提供三个确定性安全网：
 
 | 组件 | 适合解决的问题 | 使用方式 |
 | --- | --- | --- |
 | Skill | 写作、清理、审查，以及判断限定语或术语是否必要 | 在对话中调用 `$anti-ai-defensive-writing` |
 | 修改对比 Checker | 检查 AI 修改前后是否丢失或发明证据 | 对 `before` 和 `after` 文件运行脚本 |
 | 论文完整性 Checker | 检查完整 LaTeX 项目的结构与文献 | 对 `main.tex` 运行脚本 |
+| Release Checker | 检查实际上传包中的身份泄露与打包残留 | 对上传目录运行 `check_release_package.py` |
 
-Checker 不判断文章“像不像 AI”。脚本负责数字、引用、公式、label 和 BibTeX
-等确定性问题；Skill 负责判断免责声明是否多余、claim 是否被削弱、术语是否
-真的等价等语义问题。普通用户只需要安装 Skill 并告诉 Codex 目标，Codex 会在
-需要时运行 Checker。
+Checker 不判断文章“像不像 AI”。脚本负责数字、引用、公式、label、BibTeX 和
+release package 表面等确定性问题；Skill 负责判断免责声明是否多余、claim 是否
+被削弱、术语是否真的等价等语义问题。普通用户只需要安装 Skill 并告诉 Codex
+目标，Codex 会在需要时运行 Checker。
 
 `npx` 命令只负责安装 Skill，不提供单独的 `check` 子命令。下面的脚本命令
 默认从克隆后的仓库根目录运行。通过 `npx` 安装到 Codex 后，脚本位于：
@@ -196,13 +213,43 @@ provider_error 和 unverifiable，并尽量给出字段差异与来源链接。
 claim。只有用户明确要求时才审查 citation 是否支持 claim；不能因为当前只
 提供了摘要或引言，就判断完整论文缺少证据。
 
+## Review package 与 camera-ready 检查
+
+对实际准备上传的目录运行 Checker，而不是只检查 `main.tex`。双盲投稿示例：
+
+```bash
+python3 skills/anti-ai-defensive-writing/scripts/check_release_package.py \
+  submission/ --release review --anonymity double-blind \
+  --identity-term "Author Name" \
+  --identity-term "github.com/author-account"
+```
+
+单盲和不匿名审稿分别使用 `--anonymity single-blind` 与 `--anonymity none`。
+Camera-ready 使用：
+
+```bash
+python3 skills/anti-ai-defensive-writing/scripts/check_release_package.py \
+  camera-ready/ --release publication
+```
+
+脚本会只读扫描文件名、目录名、可读源码、常见 LaTeX 作者字段、email、ORCID、
+本机用户路径、仓库 URL、可读取的 PDF author metadata、匿名占位符和打包残留。
+`--identity-term` 可以重复填写已知作者名、用户名、单位、域名、项目名和路径片段。
+
+截图、PDF 页面、slide 和视频会单独列为 `manual_checks`。Skill 应继续做视觉
+检查，寻找姓名、用户名、头像、浏览器标签、账号菜单、终端路径、水印，以及
+参与者或标注者身份。脚本本身不做 OCR，也不理解具体 venue policy；纯文本扫描
+没有发现问题不等于“已经证明匿名”。无法检查的附件、metadata、链接或视觉内容
+必须标记为 unresolved。
+
 ## 如何看检查结果
 
-- **P0，证据完整性：** 数字、引用、公式、指标、实验、条件或结论范围被修改或虚构，
-  或者存在未解析引用与冲突 key。
+- **P0，证据或发布完整性：** 数字、引用、公式、指标、实验、条件或结论范围被修改
+  或虚构，存在未解析引用与冲突 key，或者身份信息违反已提供的发布政策。
 - **P1，分析或结构问题：** 机械免责声明、无来源解释、结论瘫软、审稿人口吻、
-  空洞抽象、结构歧义或术语歧义。
-- **P2，非阻塞清理：** 无意义的破折号、斜体、粗体、括号、表格装饰或未使用记录。
+  空洞抽象、结构歧义、术语歧义，或者需要依据 venue policy 确认的身份表面。
+- **P2，非阻塞清理：** 无意义的破折号、斜体、粗体、括号、表格装饰、未使用记录
+  或打包残留。
 
 P0 永远优先于风格。为了让句子更顺而损坏证据，属于失败的修改。
 
@@ -216,6 +263,10 @@ P0 永远优先于风格。为了让句子更顺而损坏证据，属于失败�
 
 默认情况下，P0 会让脚本返回失败状态；加入 `--strict` 后，P1 和 P2 也会返回
 失败状态。脚本只报告问题，不会自动修改论文或参考文献。
+
+Review package 必须显式提供 `--anonymity`，避免工具把所有 submission 自动
+当作双盲投稿。Camera-ready 恢复作者身份后，参与者、标注者和工作人员隐私仍然
+需要检查，不能跟着作者信息一起自动公开。
 
 ## 更多信息
 

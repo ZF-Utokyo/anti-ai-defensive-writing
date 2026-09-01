@@ -7,10 +7,10 @@ description: >
   what the evidence supports. Use for cleaning AI-generated abstracts, papers,
   methods, results, captions, tables, and conclusions while preserving facts and
   legitimate uncertainty; for evidence-grounded rebuttals, reviewer responses, and
-  revision letters; or for optional manuscript-integrity audits of LaTeX
-  cross-references, figure and table order, BibTeX records, acronyms, and
-  terminology. Do not use this skill to conduct statistical analysis or peer review
-  itself.
+  revision letters; for review-package anonymity and camera-ready release audits;
+  or for optional manuscript-integrity audits of LaTeX cross-references, figure and
+  table order, BibTeX records, acronyms, and terminology. Do not use this skill to
+  conduct statistical analysis or peer review itself.
 ---
 
 # Anti AI-Defensive Writing Skill
@@ -75,6 +75,14 @@ audit separate from ordinary prose cleanup. Run deterministic local checks befor
 semantic or external checks, and never treat a metadata search result as proof
 that a cited work supports a claim.
 
+When the user asks whether a submission, revision, resubmission, camera-ready paper,
+or supplementary bundle is ready to upload, or asks for an anonymity or identity
+audit, read [release-package.md](references/release-package.md). Keep this inside
+the Paper path. Select either a review package with the venue's explicit `none`,
+`single-blind`, or `double-blind` anonymity model, or a publication package. Audit
+the exact upload bundle, including metadata and visual artifacts; never infer that
+all submissions are anonymous or claim that a text scan proves anonymity.
+
 ## Apply the four tests
 
 For each qualifier, statistic, metric, probe, formatting choice, or methodological
@@ -94,15 +102,18 @@ only as an explicit proposal, never as completed work.
 
 Assign the highest applicable severity and resolve higher-severity problems first:
 
-- **P0, evidence integrity:** changed or invented numbers, uncertainty, citations,
-  equations, metrics, probes, experiments, conditions, or claim scope; unresolved
-  references or conflicting keys in Integrity mode. Never trade evidence integrity
-  for cleaner style.
+- **P0, evidence or release integrity:** changed or invented numbers, uncertainty,
+  citations, equations, metrics, probes, experiments, conditions, or claim scope;
+  unresolved references or conflicting keys; or identity exposure that violates the
+  supplied release policy. Never trade evidence or release integrity for cleaner
+  style.
 - **P1, analytical defensiveness:** reflexive caveats, unsupported interpretations,
   claim paralysis, vague abstraction, reviewer voice, unnecessary analytical
-  commitments, or structural and terminology ambiguities.
+  commitments, structural and terminology ambiguities, or policy-dependent identity
+  surfaces that need verification.
 - **P2, presentation residue:** gratuitous em dashes, italics, bold text,
-  parentheticals, table decoration, unused records, or other nonblocking cleanup.
+  parentheticals, table decoration, unused records, package residue, or other
+  nonblocking cleanup.
 
 In Audit mode, report this severity with each consequential finding. Do not label a
 defined technical term or explicit style choice as a problem merely because it
@@ -197,6 +208,22 @@ query fields, not manuscript prose, and never edits `.bib` automatically. Use th
 JSON option for structured output and consult the manuscript-integrity reference
 for privacy boundaries, result meanings, and terminology decisions.
 
+For a deterministic review-package scan, require the venue's anonymity model and
+run:
+
+    python3 scripts/check_release_package.py submission/ \
+      --release review --anonymity double-blind \
+      --identity-term "Author Name"
+
+For a camera-ready or accepted package, run:
+
+    python3 scripts/check_release_package.py camera-ready/ --release publication
+
+Use the exact upload directory. Inspect every reported visual or media artifact
+with available rendering tools. If an artifact, archive, metadata surface, linked
+resource, or venue rule cannot be checked, report it as unresolved rather than
+certifying the package.
+
 ## Output contract
 
 For Draft or Clean mode:
@@ -218,7 +245,9 @@ private files, or query external services unless the user requests the relevant
 action. Report a missing external result as unresolved evidence, not as a
 hallucinated citation. Stay within the requested audit surfaces. Do not infer that
 a claim lacks evidence merely because the user supplied an excerpt, and do not
-start a claim-support audit unless requested.
+start a claim-support audit unless requested. For release audits, state the selected
+profile and policy, separate deterministic findings from visual or manual checks,
+and conclude ready, not ready, or unresolved without overstating coverage.
 
 ## Final check
 
@@ -227,5 +256,6 @@ start a claim-support audit unless requested.
 - The claim is neither broader nor weaker than the evidence supports.
 - Technical terms are defined and relevant.
 - Formatting helps interpretation rather than simulating sophistication.
+- A requested release audit used the correct venue policy and exact upload bundle.
 - The result reads like an author communicating evidence, not an AI anticipating
   every possible reviewer objection.

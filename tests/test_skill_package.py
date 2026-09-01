@@ -69,6 +69,18 @@ class SkillPackageChecks(unittest.TestCase):
         self.assertIn("never write \"we added,\"", workflow)
         self.assertRegex(workflow, r"Do not predict score\s+changes")
 
+    def test_release_package_reference_is_routed_from_skill(self):
+        text = SKILL_FILE.read_text(encoding="utf-8")
+        self.assertIn("references/release-package.md", text)
+        self.assertIn("review package", text)
+        self.assertIn("publication package", text)
+        workflow = SKILL_DIR.joinpath(
+            "references", "release-package.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("none`, `single-blind`, or `double-blind", workflow)
+        self.assertIn("Never claim that a text-only scan proves anonymity", workflow)
+        self.assertIn("participant,\ninterviewee, annotator", workflow)
+
     def test_repository_prompt_entry_points_exist(self):
         prompt_names = {
             "quick-prompt.txt",
@@ -76,6 +88,7 @@ class SkillPackageChecks(unittest.TestCase):
             "full-manuscript-prompt.txt",
             "integrity-prompt.txt",
             "rebuttal-prompt.txt",
+            "release-audit-prompt.txt",
         }
         prompt_directory = ROOT / "prompts"
         self.assertEqual(
@@ -86,7 +99,7 @@ class SkillPackageChecks(unittest.TestCase):
     def test_npm_manifest_installs_the_skill(self):
         manifest = json.loads(ROOT.joinpath("package.json").read_text(encoding="utf-8"))
         self.assertEqual("anti-ai-defensive-writing", manifest["name"])
-        self.assertEqual("0.4.0", manifest["version"])
+        self.assertEqual("0.5.0", manifest["version"])
         self.assertEqual("bin/install.mjs", manifest["bin"]["anti-ai-defensive-writing"])
         self.assertIn("skills/anti-ai-defensive-writing", manifest["files"])
         self.assertIn("prompts", manifest["files"])

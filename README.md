@@ -4,9 +4,10 @@
 
 An English, zero-dependency AI skill for removing unrequested caveats, faux rigor,
 opaque abstraction, and formatting residue from academic writing without weakening
-claims that the evidence supports. It also provides an opt-in manuscript-integrity
-audit for LaTeX references, figures, tables, BibTeX, acronyms, and terminology,
-plus an evidence-grounded workflow for rebuttals and reviewer responses.
+claims that the evidence supports. It also provides opt-in manuscript-integrity
+audits for LaTeX references, figures, tables, BibTeX, acronyms, and terminology;
+release-package audits for review anonymity and camera-ready identity; and an
+evidence-grounded workflow for rebuttals and reviewer responses.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
@@ -45,6 +46,15 @@ manuscript. Answer each concern with existing evidence and an exact location.
 Do not promise new work unless I have approved it.
 ```
 
+For a double-blind review package, including appendices and screenshots:
+
+```text
+Use $anti-ai-defensive-writing in Integrity mode to audit the exact upload package.
+This is a double-blind review submission. Apply the supplied venue policy, run the
+release checker, and visually inspect every PDF page, figure, and screenshot. Do
+not modify my files or claim anonymity for anything you could not inspect.
+```
+
 Most users can stop here. Codex selects and runs the bundled checker when the task
 needs deterministic validation.
 
@@ -57,22 +67,29 @@ The Skill has two task paths:
 | Paper | Draft, clean, or check manuscript prose, evidence, structure, and bibliography |
 | Rebuttal | Map reviewer comments to existing evidence, exact locations, and authorized actions |
 
-Submission, revision, and camera-ready work stay on the Paper path; venue rules
-change, but the evidence workflow does not. Rebuttal stays separate because the
-primary artifact is a response to reviewer comments.
+The Paper path has two release profiles:
 
-The repository also includes two deterministic safety nets for the Paper path:
+| Release profile | Includes | Identity rule |
+| --- | --- | --- |
+| Review package | Submission, revision, and resubmission | Use the venue's explicit `none`, `single-blind`, or `double-blind` model |
+| Publication package | Accepted and camera-ready material | Restore verified author-facing information and remove review-only placeholders |
+
+The word "submission" never implies anonymity by itself. Rebuttal stays separate
+because its primary artifact is a response to reviewer comments.
+
+The repository also includes three deterministic safety nets for the Paper path:
 
 | Component | Use it for | How to invoke it |
 | --- | --- | --- |
 | Skill | Drafting, cleaning, auditing, and evidence-aware judgment | Ask the agent using `$anti-ai-defensive-writing` |
 | Rewrite checker | Comparing an original passage with an AI-edited version | Run `check_academic_rewrite.py before after` |
 | Manuscript checker | Auditing a complete LaTeX project and its bibliography | Run `check_manuscript_integrity.py main.tex` |
+| Release checker | Scanning the exact upload bundle for identity and packaging surfaces | Run `check_release_package.py PACKAGE --release ...` |
 
 The checker scripts do not decide whether prose is human or AI. They protect
-deterministic evidence and manuscript structure, while the Skill handles semantic
-questions such as whether a caveat is necessary or two technical terms are truly
-equivalent.
+deterministic evidence, manuscript structure, and release-package surfaces, while
+the Skill handles semantic questions such as whether a caveat is necessary or two
+technical terms are truly equivalent.
 
 The `npx` command installs the Skill; it does not expose a `check` subcommand.
 An agent can run the bundled scripts for you. The shell commands below assume a
@@ -142,6 +159,7 @@ information.
 - em dashes, italics, bold text, and other synthetic formatting habits;
 - abstract or difficult sentences that can be made concrete;
 - rebuttals, responses to meta-reviews, and revision letters;
+- double-blind review bundles and camera-ready de-anonymization;
 - optional figure/table, cross-reference, BibTeX, acronym, and terminology audits.
 
 It has four modes:
@@ -149,7 +167,8 @@ It has four modes:
 - **Draft:** write from supplied facts without inventing analytical machinery;
 - **Clean:** return a usable revision while preserving evidence and author voice;
 - **Audit:** identify consequential artifacts and propose minimal repairs;
-- **Integrity:** audit manuscript structure and metadata without silently editing it.
+- **Integrity:** audit manuscript structure, metadata, and release packaging without
+  silently editing it.
 
 The Skill adapts those modes to the academic context: abstract and introduction,
 methods, results, tables and captions, discussion and conclusion, or rebuttal and
@@ -165,14 +184,15 @@ user requests it.
 
 Problems are ordered by consequence:
 
-- **P0, evidence integrity:** changed or invented numbers, uncertainty, citations,
-  equations, metrics, probes, experiments, conditions, claim scope, unresolved
-  references, or conflicting keys;
+- **P0, evidence or release integrity:** changed or invented numbers, uncertainty,
+  citations, equations, metrics, probes, experiments, conditions, claim scope,
+  unresolved references, conflicting keys, or identity exposure that violates the
+  supplied release policy;
 - **P1, analytical defensiveness:** reflexive caveats, unsupported interpretations,
   claim paralysis, vague abstraction, reviewer voice, and structural or terminology
-  ambiguities;
+  ambiguities, plus policy-dependent identity surfaces that need verification;
 - **P2, presentation residue:** gratuitous em dashes, italics, bold text,
-  parentheticals, table decoration, and other nonblocking cleanup.
+  parentheticals, table decoration, package residue, and other nonblocking cleanup.
 
 P0 always outranks style. The Skill never makes a sentence cleaner by making its
 evidence less accurate.
@@ -270,6 +290,42 @@ their hosted interfaces or undocumented endpoints. Claim-support auditing is a
 separate, explicit request. An excerpt without its Results section is not evidence
 that the full manuscript lacks support.
 
+### Audit a review or publication package
+
+Run the release checker on the exact directory or file that will be uploaded. A
+double-blind review example is:
+
+```bash
+python3 skills/anti-ai-defensive-writing/scripts/check_release_package.py \
+  submission/ --release review --anonymity double-blind \
+  --identity-term "Author Name" \
+  --identity-term "github.com/author-account"
+```
+
+For non-anonymous or single-blind review, use `--anonymity none` or
+`--anonymity single-blind`. For camera-ready material, run:
+
+```bash
+python3 skills/anti-ai-defensive-writing/scripts/check_release_package.py \
+  camera-ready/ --release publication
+```
+
+The zero-dependency, read-only checker scans package paths, readable source files,
+common LaTeX identity fields, emails, ORCID identifiers, local home paths,
+repository URLs, accessible PDF author metadata, review placeholders, archives,
+and packaging residue. Repeated `--identity-term` flags add known names, usernames,
+affiliations, domains, project names, or path fragments. Use specific terms; a
+surname alone can collide with a legitimate bibliography entry.
+
+Visual artifacts are returned separately as manual checks. The Skill should render
+every submitted PDF page and inspect appendices, figures, screenshots, slides, and
+videos for names, avatars, account menus, browser tabs, terminal paths, comments,
+watermarks, and participant or annotator identity. The script does not perform OCR
+or interpret venue rules, inspect office-document internals, or reliably read
+compressed metadata. A clean text scan never certifies anonymity. If the current
+policy, an archive, metadata, linked resource, or visual artifact cannot be checked,
+the result remains `unresolved`.
+
 ### Understand checker results
 
 P0, P1, and P2 follow the [severity model](#severity-model) above. By default, a
@@ -286,6 +342,10 @@ Online bibliography results use these states:
 - `conflicting_metadata`: important supplied and source fields disagree;
 - `provider_error` or `unverifiable`: the provider failed or the record lacks
   enough query metadata.
+
+Release-checker output separates deterministic `findings` from `manual_checks`.
+For review packages, `--anonymity` is required so the checker never silently assumes
+that a submission is double-blind.
 
 ## Installation options
 
@@ -320,6 +380,7 @@ cp -r skills/anti-ai-defensive-writing ~/.codex/skills/
 - [Clean a complete manuscript](prompts/full-manuscript-prompt.txt)
 - [Audit manuscript integrity](prompts/integrity-prompt.txt)
 - [Draft or clean a rebuttal](prompts/rebuttal-prompt.txt)
+- [Audit a review or publication package](prompts/release-audit-prompt.txt)
 
 These are task entry points, not separate policy implementations. The repository
 checks that they retain the same evidence-integrity rules as the Skill.
@@ -331,6 +392,8 @@ claims unsupported by evidence. It preserves legitimate uncertainty, technical
 terms, and venue requirements. It does not upload private bibliographies, silently
 renumber displays, replace records, or declare citations hallucinated from a failed
 metadata search. It removes model-added noise and unsupported rigor.
+It also does not certify anonymity from text alone or reveal participant and
+annotator identity merely because the authors are de-anonymized for publication.
 
 ## Contributing
 

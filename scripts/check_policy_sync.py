@@ -14,6 +14,7 @@ DOCUMENTS = {
     "full-manuscript-prompt": ROOT / "prompts" / "full-manuscript-prompt.txt",
     "integrity-prompt": ROOT / "prompts" / "integrity-prompt.txt",
     "rebuttal-prompt": ROOT / "prompts" / "rebuttal-prompt.txt",
+    "release-audit-prompt": ROOT / "prompts" / "release-audit-prompt.txt",
 }
 
 INVARIANTS = {

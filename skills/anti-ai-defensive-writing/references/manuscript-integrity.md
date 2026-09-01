@@ -1,9 +1,10 @@
 # Manuscript integrity audit
 
-Use this optional workflow when the user asks for submission checks, figure or
-table references, citation order, BibTeX validation, acronym definitions, or
-terminology consistency. Do not run it automatically for an ordinary prose
-cleanup.
+Use this optional workflow when the user asks for figure or table references,
+citation order, BibTeX validation, acronym definitions, or terminology consistency.
+Do not run it automatically for an ordinary prose cleanup. For anonymity,
+camera-ready identity, or upload-package checks, use
+[release-package.md](release-package.md) instead.
 
 ## Contents
 
