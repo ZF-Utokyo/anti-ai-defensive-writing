@@ -99,6 +99,11 @@ core rule is simple:
 | Manuscript checker | LaTeX references, figure/table order, BibTeX, acronyms, and terminology leads | `check_manuscript_integrity.py main.tex`; add `--verify-online` for Crossref with a DBLP fallback |
 | Release checker | Review anonymity, camera-ready identity, metadata, file paths, and upload-package residue | `check_release_package.py PACKAGE --release ...` |
 
+> **BibTeX checking is built in.** Validate citation keys and metadata locally, or
+> add `--verify-online` to check cited records through Crossref with a DBLP fallback.
+> The checker never uploads manuscript prose, rewrites `.bib` files, or treats
+> `not_found` as proof of a fabricated reference.
+
 The scripts are zero-dependency and read-only. They do not decide whether text is
 human or AI. The Skill handles semantic judgment; the checkers protect deterministic
 surfaces and report anything that still requires visual or policy review.

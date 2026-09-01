@@ -90,6 +90,11 @@ Dataset A 已经给出了真实边界，额外的免责声明没有增加证据�
 | 论文完整性 Checker | LaTeX 引用、图表顺序、BibTeX、缩写和术语线索 | `check_manuscript_integrity.py main.tex`；加入 `--verify-online` 后使用 Crossref，并在需要时回退到 DBLP |
 | Release Checker | Review 匿名、camera-ready 身份、metadata、路径和上传包残留 | `check_release_package.py PACKAGE --release ...` |
 
+> **内置 BibTeX 检查。** 可以先在本地检查 citation key 和 metadata，也可以加入
+> `--verify-online`，通过 Crossref 核验正文引用的记录，并在需要时回退到 DBLP。
+> Checker 不上传论文正文，不自动修改 `.bib`，也不会把 `not_found` 直接判定为
+> 虚构文献。
+
 三个脚本都不依赖额外 Python 包，默认只读，也不判断文字“像不像 AI”。Skill
 负责语义判断；Checker 保护确定性信息，并列出仍需视觉或 venue policy 确认的内容。
 
