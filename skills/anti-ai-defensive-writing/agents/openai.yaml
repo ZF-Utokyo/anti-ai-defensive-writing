@@ -1,0 +1,4 @@
+interface:
+  display_name: "Anti AI-Defensive Writing"
+  short_description: "Clean faux rigor and defensive AI prose"
+  default_prompt: "Use $anti-ai-defensive-writing to clean this academic passage without inventing statistics or weakening supported claims."
