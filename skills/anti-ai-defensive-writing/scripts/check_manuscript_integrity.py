@@ -5,11 +5,18 @@ from __future__ import annotations
 
 import argparse
 from bisect import bisect_right
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 import json
 from pathlib import Path
 import re
+import sys
 from typing import Iterable, List, Sequence
+
+from verify_bibliography_online import (
+    ReferenceRecord,
+    VerificationResult,
+    verify_records,
+)
 
 
 INCLUDE_RE = re.compile(r"\\(?:input|include)\s*\{([^{}]+)\}")
@@ -81,6 +88,7 @@ class Finding:
 @dataclass
 class CheckResult:
     findings: List[Finding]
+    online_results: List[VerificationResult] = field(default_factory=list)
 
     @property
     def errors(self) -> List[Finding]:
@@ -102,6 +110,7 @@ class CheckResult:
             "ok": self.ok,
             "counts": counts,
             "findings": [asdict(item) for item in self.findings],
+            "online_verification": [item.to_dict() for item in self.online_results],
         }
 
 
@@ -403,6 +412,43 @@ def _normalize_title(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", value.lower()).strip()
 
 
+def _bibtex_authors(value: str) -> tuple[str, ...]:
+    return tuple(
+        _clean_bib_value(item)
+        for item in re.split(r"\s+and\s+", value, flags=re.I)
+        if _clean_bib_value(item)
+    )
+
+
+def _bibtex_year(fields: dict[str, str]) -> int | None:
+    value = fields.get("year") or fields.get("date") or ""
+    match = re.search(r"\b\d{4}\b", value)
+    return int(match.group(0)) if match else None
+
+
+def _reference_record(entry: BibEntry) -> ReferenceRecord:
+    fields = entry.fields
+    venue = (
+        fields.get("journal")
+        or fields.get("journaltitle")
+        or fields.get("booktitle")
+        or fields.get("publisher")
+        or ""
+    )
+    doi = _normalize_doi(fields["doi"]) if fields.get("doi") else ""
+    return ReferenceRecord(
+        key=entry.key,
+        title=fields.get("title", ""),
+        authors=_bibtex_authors(fields.get("author", "")),
+        year=_bibtex_year(fields),
+        venue=venue,
+        doi=doi,
+        entry_type=entry.entry_type,
+        path=str(entry.path),
+        line=entry.line,
+    )
+
+
 def _prose_for_acronyms(text: str) -> str:
     output = text
     for pattern in (
@@ -426,6 +472,13 @@ def check_manuscript(
     bib_paths: Sequence[Path] = (),
     known_acronyms: Sequence[str] = (),
     report_unused_bib: bool = True,
+    verify_online: bool = False,
+    verify_all_bib: bool = False,
+    online_provider: str = "auto",
+    online_mailto: str | None = None,
+    online_timeout: float = 10.0,
+    online_workers: int = 3,
+    online_fetch_json=None,
 ) -> CheckResult:
     loader = _ManuscriptLoader()
     loader.load(tex_path)
@@ -695,15 +748,65 @@ def check_manuscript(
                     case_variants[0].start(),
                 )
 
+    online_results: List[VerificationResult] = []
+    if verify_online:
+        target_keys = (
+            set(entry_positions)
+            if verify_all_bib or has_nocite_all
+            else cited_keys
+        )
+        records = [
+            _reference_record(items[0])
+            for key, items in entry_positions.items()
+            if key in target_keys and len(items) == 1
+        ]
+        if not records:
+            add(
+                "P1",
+                "online-no-records",
+                "No unique cited BibTeX records are available for online verification",
+            )
+        else:
+            online_results = verify_records(
+                records,
+                provider=online_provider,
+                mailto=online_mailto,
+                timeout=online_timeout,
+                workers=online_workers,
+                fetch_json=online_fetch_json,
+            )
+            online_severity = {
+                "conflicting_metadata": ("P0", "online-metadata-conflict"),
+                "likely_match": ("P1", "online-metadata-review"),
+                "ambiguous": ("P1", "online-metadata-ambiguous"),
+                "not_found": ("P1", "online-metadata-not-found"),
+                "provider_error": ("P1", "online-provider-error"),
+                "unverifiable": ("P1", "online-record-unverifiable"),
+            }
+            for result in online_results:
+                if result.status not in online_severity:
+                    continue
+                severity, code = online_severity[result.status]
+                details = "; ".join(result.differences) or result.message
+                findings.append(
+                    Finding(
+                        severity,
+                        code,
+                        f"{result.key}: {details}",
+                        result.path,
+                        result.line,
+                    )
+                )
+
     severity_rank = {"P0": 0, "P1": 1, "P2": 2}
     findings.sort(key=lambda item: (severity_rank[item.severity], item.path or "", item.line or 0, item.code))
-    return CheckResult(findings)
+    return CheckResult(findings, online_results)
 
 
 def _format_text(result: CheckResult) -> str:
-    if not result.findings:
+    if not result.findings and not result.online_results:
         return "OK: manuscript integrity checks passed"
-    lines = []
+    lines = [] if result.findings else ["OK: local manuscript integrity checks passed"]
     for severity in ("P0", "P1", "P2"):
         items = [item for item in result.findings if item.severity == severity]
         if not items:
@@ -714,6 +817,15 @@ def _format_text(result: CheckResult) -> str:
             if item.path:
                 location = item.path + (f":{item.line}" if item.line else "") + ": "
             lines.append(f"- {location}{item.code}: {item.message}")
+    if result.online_results:
+        lines.append("Online verification:")
+        for item in result.online_results:
+            provider = f" via {item.provider}" if item.provider else ""
+            lines.append(f"- [{item.status}] {item.key}{provider}: {item.message}")
+            lines.extend(f"  - {difference}" for difference in item.differences)
+            if item.source_url:
+                lines.append(f"  - Source: {item.source_url}")
+            lines.extend(f"  - Candidate: {url}" for url in item.candidate_urls)
     return "\n".join(lines)
 
 
@@ -738,16 +850,60 @@ def main(argv: List[str] | None = None) -> int:
         action="store_true",
         help="Do not report bibliography entries unused by this manuscript",
     )
+    parser.add_argument(
+        "--verify-online",
+        action="store_true",
+        help="Verify cited BibTeX metadata through Crossref and DBLP",
+    )
+    parser.add_argument(
+        "--verify-all-bib",
+        action="store_true",
+        help="Verify every BibTeX entry instead of cited entries only",
+    )
+    parser.add_argument(
+        "--online-provider",
+        choices=("auto", "crossref", "dblp"),
+        default="auto",
+        help="Online metadata provider (default: Crossref with DBLP fallback)",
+    )
+    parser.add_argument(
+        "--mailto",
+        help="Contact email for the Crossref polite pool",
+    )
+    parser.add_argument(
+        "--online-timeout",
+        type=float,
+        default=10.0,
+        metavar="SECONDS",
+        help="Timeout for each provider request (default: 10)",
+    )
+    parser.add_argument(
+        "--online-workers",
+        type=int,
+        default=3,
+        metavar="N",
+        help="Concurrent online lookups, capped at 8 (default: 3)",
+    )
     parser.add_argument("--strict", action="store_true", help="Treat P1 and P2 findings as failures")
     parser.add_argument("--json", action="store_true", help="Print machine-readable output")
     args = parser.parse_args(argv)
 
-    result = check_manuscript(
-        args.tex,
-        bib_paths=args.bib,
-        known_acronyms=args.known_acronym,
-        report_unused_bib=not args.no_unused_bib,
-    )
+    try:
+        result = check_manuscript(
+            args.tex,
+            bib_paths=args.bib,
+            known_acronyms=args.known_acronym,
+            report_unused_bib=not args.no_unused_bib,
+            verify_online=args.verify_online,
+            verify_all_bib=args.verify_all_bib,
+            online_provider=args.online_provider,
+            online_mailto=args.mailto,
+            online_timeout=args.online_timeout,
+            online_workers=args.online_workers,
+        )
+    except ValueError as exc:
+        print(f"Configuration error: {exc}", file=sys.stderr)
+        return 2
     print(json.dumps(result.to_dict(), indent=2) if args.json else _format_text(result))
     return 1 if result.errors or (args.strict and result.warnings) else 0
 

@@ -15,6 +15,8 @@ For integrity checks, distinguish a deterministic failure such as an unresolved
 label from a semantic judgment such as whether two terms are genuinely synonymous.
 External metadata mismatches need the compared fields and source link; a failed
 search alone is not evidence of a hallucinated citation.
+Unit tests for online verification must mock provider responses. Do not make the
+test suite depend on live Crossref or DBLP availability.
 
 Avoid expanding a blacklist whenever a provenance or relevance rule would handle
 the same failure more generally.

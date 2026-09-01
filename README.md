@@ -152,25 +152,46 @@ discovers `\bibliography` and `\addbibresource` files. It reports:
 
 Use `--bib FILE` when a bibliography cannot be discovered, `--no-unused-bib` for a
 shared library, `--known-acronym TERM` for an explicit field or venue exemption,
-`--json` for structured output, and `--strict` to fail on warnings. The script is
-read-only and makes no network requests.
+`--json` for structured output, and `--strict` to fail on warnings. The default
+command is offline and read-only.
+
+For one-command local and online verification, add one flag:
+
+```bash
+python3 skills/anti-ai-defensive-writing/scripts/check_manuscript_integrity.py \
+  main.tex --verify-online
+```
+
+This queries the
+[Crossref REST API](https://www.crossref.org/documentation/retrieve-metadata/rest-api/)
+first and falls back to the
+[DBLP publication search API](https://dblp.org/faq/How%2Bto%2Buse%2Bthe%2Bdblp%2Bsearch%2BAPI.html)
+when Crossref does not return an exact normalized-title match. No API key or extra
+Python package is required.
+Only BibTeX entries cited by the manuscript are queried by default; use
+`--verify-all-bib` to check the whole bibliography. `--online-provider` can pin a
+provider, `--mailto` supplies the optional Crossref contact address, and
+`--online-timeout` and `--online-workers` control requests.
 
 Semantic terminology consistency remains an agent task: the Skill builds an
 internal ledger of canonical terms, first definitions, abbreviations, variants,
 and intentional distinctions across the abstract, body, captions, tables, and
 supplement.
 
-External reference verification is optional. The workflow can use the
-[DBLP search API](https://dblp.org/faq/How%2Bto%2Buse%2Bthe%2Bdblp%2Bsearch%2BAPI.html)
-for computer-science metadata, [Citesurely](https://citesurely.com/) for a manual
-field comparison, or
+`--verify-online` sends only the title, first author, year, and DOI needed for a
+lookup. It does not upload the manuscript and never changes the paper or `.bib`
+file. Results are reported as `verified`, `likely_match`, `ambiguous`,
+`not_found`, `conflicting_metadata`, `provider_error`, or `unverifiable`, with
+field differences and source links where available. A missing result is not proof
+of a fabricated reference, and metadata existence is not proof that a source
+supports a claim.
+
+[Citesurely](https://citesurely.com/) and
 [CiteScanning](https://www.modelscope.cn/studios/aivolcano/CiteScanning/summary)
-as a manual or self-hosted multi-source check. None is a required dependency.
-Results are reported as `verified`, `likely match`, `ambiguous`, `not found`, or
-`conflicting metadata`. Not found is not treated as proof of a fabricated
-reference, and metadata existence is not treated as proof that a source supports a
-claim. Claim-support auditing is a separate, explicit request; an excerpt without
-its Results section is not evidence that the full manuscript lacks support.
+remain optional manual second opinions; the one-command path does not depend on
+their hosted interfaces or undocumented endpoints. Claim-support auditing is a
+separate, explicit request. An excerpt without its Results section is not evidence
+that the full manuscript lacks support.
 
 ## Install
 
@@ -229,7 +250,8 @@ anti-ai-defensive-writing/
 │   ├── references/
 │   └── scripts/
 │       ├── check_academic_rewrite.py
-│       └── check_manuscript_integrity.py
+│       ├── check_manuscript_integrity.py
+│       └── verify_bibliography_online.py
 ├── prompts/
 │   ├── quick-prompt.txt
 │   ├── audit-prompt.txt

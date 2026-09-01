@@ -235,6 +235,163 @@ The method follows prior work \cite{smith2024}.
             self.assertIn("invalid-doi", codes)
             self.assertIn("duplicate-bib-record", codes)
 
+    def test_online_verification_is_integrated_with_local_findings(self):
+        with tempfile.TemporaryDirectory() as directory:
+            main = self.write_project(
+                directory,
+                "\\cite{smith2024}\n\\bibliography{refs}\n",
+            )
+
+            def fetch(url, params, timeout, user_agent):
+                return {
+                    "message": {
+                        "DOI": "10.1234/example.1",
+                        "title": ["Evidence-Aligned Writing"],
+                        "author": [{"given": "Jane", "family": "Smith"}],
+                        "published": {"date-parts": [[2024]]},
+                        "container-title": ["Journal of Clear Results"],
+                        "URL": "https://doi.org/10.1234/example.1",
+                    }
+                }
+
+            result = check_manuscript(
+                main,
+                verify_online=True,
+                online_provider="crossref",
+                online_workers=1,
+                online_fetch_json=fetch,
+            )
+            self.assertEqual(1, len(result.online_results))
+            self.assertEqual("verified", result.online_results[0].status)
+            self.assertNotIn("online-metadata-conflict", self.codes(result))
+            self.assertEqual(
+                "verified",
+                result.to_dict()["online_verification"][0]["status"],
+            )
+
+    def test_online_metadata_conflict_is_p0(self):
+        with tempfile.TemporaryDirectory() as directory:
+            main = self.write_project(
+                directory,
+                "\\cite{smith2024}\n\\bibliography{refs}\n",
+            )
+
+            def fetch(url, params, timeout, user_agent):
+                return {
+                    "message": {
+                        "DOI": "10.1234/example.1",
+                        "title": ["Different Work"],
+                        "author": [{"given": "Alex", "family": "Doe"}],
+                        "published": {"date-parts": [[2020]]},
+                        "container-title": ["Another Journal"],
+                        "URL": "https://doi.org/10.1234/example.1",
+                    }
+                }
+
+            result = check_manuscript(
+                main,
+                verify_online=True,
+                online_provider="crossref",
+                online_workers=1,
+                online_fetch_json=fetch,
+            )
+            self.assertIn("online-metadata-conflict", self.codes(result))
+            self.assertFalse(result.ok)
+
+    def test_online_mode_verifies_cited_records_only_by_default(self):
+        bib = VALID_BIB + """\
+@article{unused2023,
+  title = {Unused Work},
+  author = {Doe, Alex},
+  journal = {Archive},
+  year = {2023},
+  doi = {10.1234/unused}
+}
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            main = self.write_project(
+                directory,
+                "\\cite{smith2024}\n\\bibliography{refs}\n",
+                bib=bib,
+            )
+            calls = []
+
+            def fetch(url, params, timeout, user_agent):
+                calls.append(url)
+                return {
+                    "message": {
+                        "DOI": "10.1234/example.1",
+                        "title": ["Evidence-Aligned Writing"],
+                        "author": [{"given": "Jane", "family": "Smith"}],
+                        "published": {"date-parts": [[2024]]},
+                        "container-title": ["Journal of Clear Results"],
+                        "URL": "https://doi.org/10.1234/example.1",
+                    }
+                }
+
+            result = check_manuscript(
+                main,
+                verify_online=True,
+                online_provider="crossref",
+                online_workers=1,
+                online_fetch_json=fetch,
+            )
+            self.assertEqual(1, len(calls))
+            self.assertEqual(["smith2024"], [item.key for item in result.online_results])
+
+    def test_online_mode_can_verify_the_full_bibliography(self):
+        bib = VALID_BIB + """\
+@article{unused2023,
+  title = {Unused Work},
+  author = {Doe, Alex},
+  journal = {Archive},
+  year = {2023},
+  doi = {10.1234/unused}
+}
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            main = self.write_project(
+                directory,
+                "\\cite{smith2024}\n\\bibliography{refs}\n",
+                bib=bib,
+            )
+
+            def fetch(url, params, timeout, user_agent):
+                if "unused" in url:
+                    return {
+                        "message": {
+                            "DOI": "10.1234/unused",
+                            "title": ["Unused Work"],
+                            "author": [{"given": "Alex", "family": "Doe"}],
+                            "published": {"date-parts": [[2023]]},
+                            "container-title": ["Archive"],
+                            "URL": "https://doi.org/10.1234/unused",
+                        }
+                    }
+                return {
+                    "message": {
+                        "DOI": "10.1234/example.1",
+                        "title": ["Evidence-Aligned Writing"],
+                        "author": [{"given": "Jane", "family": "Smith"}],
+                        "published": {"date-parts": [[2024]]},
+                        "container-title": ["Journal of Clear Results"],
+                        "URL": "https://doi.org/10.1234/example.1",
+                    }
+                }
+
+            result = check_manuscript(
+                main,
+                verify_online=True,
+                verify_all_bib=True,
+                online_provider="crossref",
+                online_workers=1,
+                online_fetch_json=fetch,
+            )
+            self.assertEqual(
+                ["smith2024", "unused2023"],
+                [item.key for item in result.online_results],
+            )
+
     def test_unused_bibliography_entries_can_be_suppressed(self):
         bib = VALID_BIB + """\
 @article{unused2023,

@@ -45,6 +45,10 @@ test("custom directory install copies only the Skill package", (t) => {
     true
   );
   assert.equal(
+    fs.existsSync(path.join(target, "scripts", "verify_bibliography_online.py")),
+    true
+  );
+  assert.equal(
     fs.existsSync(path.join(target, "references", "manuscript-integrity.md")),
     true
   );

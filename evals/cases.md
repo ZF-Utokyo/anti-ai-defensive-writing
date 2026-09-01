@@ -287,3 +287,24 @@ Expected behavior:
   was not supplied;
 - does not start a citation-support audit or search paper full text unless asked;
 - reports metadata uncertainty without expanding the task into peer review.
+
+## Case 20: one-command online bibliography verification
+
+Request:
+
+> Run the full LaTeX integrity check, including online verification of the cited
+> BibTeX records. Keep my manuscript and bibliography unchanged.
+
+Expected behavior:
+
+- runs the bundled checker once with `--verify-online` instead of sending the user
+  to multiple websites;
+- verifies cited entries through Crossref and falls back to DBLP when an exact
+  Crossref match is unavailable;
+- prefers DOI matching and otherwise requires an exact normalized-title match
+  before comparing author, year, venue, and DOI fields;
+- reports status, field differences, and source or candidate links;
+- labels missing and ambiguous results without claiming the reference was
+  fabricated;
+- does not upload manuscript prose, verify uncited entries unless requested, or
+  modify the manuscript or bibliography.

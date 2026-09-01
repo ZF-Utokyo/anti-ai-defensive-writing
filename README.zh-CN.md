@@ -99,15 +99,34 @@ python3 skills/anti-ai-defensive-writing/scripts/check_manuscript_integrity.py \
 
 它会检查未解析或重复的 label/citation key、没有正文引用或引用顺序异常的
 Figure/Table、常见 BibTeX 字段与 DOI/URL 问题，以及缩写首次定义和大小写。
-脚本不会联网，也不会自动修改论文。
+默认命令不联网，也不会自动修改论文。
 
-外部文献核验是可选步骤：计算机科学文献可查
-[DBLP](https://dblp.org/)，也可以人工使用
-[Citesurely](https://citesurely.com/) 或
+如果需要本地检查加在线文献核验，一条命令即可完成：
+
+```bash
+python3 skills/anti-ai-defensive-writing/scripts/check_manuscript_integrity.py \
+  main.tex --verify-online
+```
+
+脚本会先查
+[Crossref REST API](https://www.crossref.org/documentation/retrieve-metadata/rest-api/)；
+如果没有得到标题完全匹配的结果，再自动回退到
+[DBLP 文献检索 API](https://dblp.org/faq/How%2Bto%2Buse%2Bthe%2Bdblp%2Bsearch%2BAPI.html)。
+不需要 API key，也不需要安装额外 Python 包。默认只核验正文实际引用的 BibTeX
+条目；`--verify-all-bib` 可以检查整个文献库，`--online-provider` 可以指定
+数据源，`--mailto` 可以提供 Crossref 建议的联系邮箱。
+
+只有显式加入 `--verify-online` 时才会联网，并且只发送检索所需的题目、
+第一作者、年份和 DOI，不上传论文正文，不会自动修改论文或 `.bib`。结果会
+区分 verified、likely_match、ambiguous、not_found、conflicting_metadata、
+provider_error 和 unverifiable，并尽量给出字段差异与来源链接。
+
+[Citesurely](https://citesurely.com/) 和
 [CiteScanning](https://www.modelscope.cn/studios/aivolcano/CiteScanning/summary)
-交叉核对。查不到只能标记为未确认，不能直接判定为 AI 虚构；查到元数据也
-不能证明该论文支持正文中的具体 claim。只有用户明确要求时才审查 citation
-是否支持 claim；不能因为当前只提供了摘要或引言，就判断完整论文缺少证据。
+可以继续作为人工二次核对工具，但一键流程不依赖它们的网页界面或未公开接口。
+查不到不能直接判定为 AI 虚构；查到元数据也不能证明该论文支持正文中的具体
+claim。只有用户明确要求时才审查 citation 是否支持 claim；不能因为当前只
+提供了摘要或引言，就判断完整论文缺少证据。
 
 ## 问题分级
 

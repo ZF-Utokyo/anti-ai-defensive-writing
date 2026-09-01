@@ -176,9 +176,18 @@ For a LaTeX manuscript-integrity request, run the second bundled checker:
 
 It follows static includes and checks local labels, references, display order,
 BibTeX keys and common metadata, hard-coded display numbers, and acronym use. Treat
-its findings as source-located leads, not automatic edits. Use the JSON option for
-structured output and consult the manuscript-integrity reference for external
-verification and terminology decisions.
+its findings as source-located leads, not automatic edits.
+
+When the user authorizes online metadata verification, run the same check in one
+step:
+
+    python3 scripts/check_manuscript_integrity.py main.tex --verify-online
+
+This checks cited BibTeX records through Crossref with a DBLP fallback, using exact
+DOI or normalized-title matching before comparing fields. It sends bibliographic
+query fields, not manuscript prose, and never edits `.bib` automatically. Use the
+JSON option for structured output and consult the manuscript-integrity reference
+for privacy boundaries, result meanings, and terminology decisions.
 
 ## Output contract
 

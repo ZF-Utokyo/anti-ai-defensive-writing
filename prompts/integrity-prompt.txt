@@ -14,14 +14,16 @@ text as separate reading units when appropriate, then check captions, tables,
 appendices, and supplementary material. Do not merge genuinely distinct concepts
 or vary a technical term merely to avoid repetition.
 
-Run deterministic local checks before external verification. Use external metadata
-services only when I request network verification. Treat their results as
-verified, likely match, ambiguous, not found, or conflicting metadata. Do not treat
-not found as proof of a hallucinated reference, upload private bibliography data
-without permission, or automatically replace BibTeX records. Bibliographic
-existence does not prove that a citation supports a claim. Do not audit empirical
-claim support unless I explicitly request it, and do not treat evidence omitted
-from an excerpt as evidence that the full manuscript lacks.
+Run the bundled manuscript checker with --verify-online so the local checks and
+online metadata verification happen in one command. This prompt authorizes sending
+the cited records' DOI or title, first author, and year to the documented Crossref
+and DBLP APIs; do not upload manuscript prose. Treat results as verified,
+likely_match, ambiguous, not_found, conflicting_metadata, provider_error, or
+unverifiable. Do not treat not_found as proof of a hallucinated reference or
+automatically replace BibTeX records. Bibliographic existence does not prove that a
+citation supports a claim. Do not audit empirical claim support unless I explicitly
+request it, and do not treat evidence omitted from an excerpt as evidence that the
+full manuscript lacks.
 
 Preserve all supplied facts, numbers, citations, equations, scope conditions, and
 venue requirements. Unsupported interpretations, evaluative labels, and

@@ -19,11 +19,19 @@ Run deterministic checks on LaTeX and BibTeX files when they are available:
 
     python3 scripts/check_manuscript_integrity.py main.tex
 
+For one-command local and online metadata verification, after the user authorizes
+network access:
+
+    python3 scripts/check_manuscript_integrity.py main.tex --verify-online
+
 The checker follows static \input and \include commands and discovers
 \bibliography and \addbibresource files. Use --bib FILE for a bibliography that
 cannot be discovered. Use --json for structured output, --strict to fail on P1 and
 P2 findings, --no-unused-bib for a shared library, and --known-acronym TERM only
-for an explicit field or venue exemption.
+for an explicit field or venue exemption. Online mode verifies cited entries by
+default. Use --verify-all-bib for the full library, --online-provider to pin
+Crossref or DBLP, --mailto for the optional Crossref contact address, and
+--online-timeout or --online-workers to tune requests.
 
 Treat script findings as leads with source locations. Inspect macro-generated
 references, custom environments, and venue conventions manually. Do not rewrite
@@ -59,24 +67,31 @@ First verify local consistency:
 - preserve BibTeX braces that protect capitalization in names and technical terms.
 
 Then verify metadata externally only when the user requests it and network access
-is available. Prefer a DOI or publisher record as the primary anchor.
+is available. The bundled one-command route uses the documented
+[Crossref REST API](https://www.crossref.org/documentation/retrieve-metadata/rest-api/)
+first and the
+[DBLP publication search API](https://dblp.org/faq/How%2Bto%2Buse%2Bthe%2Bdblp%2Bsearch%2BAPI.html)
+as a fallback.
 
-- Use the [DBLP publication search API](https://dblp.org/faq/How%2Bto%2Buse%2Bthe%2Bdblp%2Bsearch%2BAPI.html)
-  for computer-science metadata. Do not treat DBLP as complete outside its scope.
+- Prefer an exact DOI lookup. Without a DOI, require an exact normalized-title
+  match before comparing authors, year, venue, and DOI.
+- Use Crossref for broad scholarly metadata and DBLP as a computer-science
+  fallback. Do not treat either source as complete.
 - Use [Citesurely](https://citesurely.com/) as an optional manual comparison of
   title, author, year, and venue. Do not assume a private or stable API.
 - Use [CiteScanning](https://www.modelscope.cn/studios/aivolcano/CiteScanning/summary)
   as an optional manual or self-hosted multi-source check. Do not copy its code or
   make its hosted interface a required dependency.
 
-Do not upload a private bibliography to a third-party service without the user's
-authorization. Do not scrape a service, bypass limits, or depend on an
+Online mode sends the DOI, or a query composed from the title, first author, and
+year. It never uploads manuscript prose. Do not send these fields without the
+user's authorization, scrape a service, bypass limits, or depend on an
 undocumented endpoint.
 
-Record each external result as verified, likely match, ambiguous, not found, or
-conflicting metadata. A missing result is not proof that a reference is fabricated.
-Never replace a BibTeX record automatically; show the compared fields and
-authoritative link for author confirmation.
+Record each external result as verified, likely_match, ambiguous, not_found,
+conflicting_metadata, provider_error, or unverifiable. A missing result is not proof
+that a reference is fabricated. Never replace a BibTeX record automatically; show
+the compared fields and authoritative link for author confirmation.
 
 Bibliographic existence and citation support are different questions. Metadata can
 confirm that a work exists. It cannot establish that the work supports a sentence.

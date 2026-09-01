@@ -55,6 +55,8 @@ class SkillPackageChecks(unittest.TestCase):
         self.assertIn("A missing result is not proof", workflow)
         self.assertIn("terminology ledger", workflow.lower())
         self.assertIn("Do not start a claim-support audit unless", workflow)
+        self.assertIn("--verify-online", workflow)
+        self.assertIn("Crossref", workflow)
 
     def test_repository_prompt_entry_points_exist(self):
         prompt_names = {
@@ -72,7 +74,7 @@ class SkillPackageChecks(unittest.TestCase):
     def test_npm_manifest_installs_the_skill(self):
         manifest = json.loads(ROOT.joinpath("package.json").read_text(encoding="utf-8"))
         self.assertEqual("anti-ai-defensive-writing", manifest["name"])
-        self.assertEqual("0.2.0", manifest["version"])
+        self.assertEqual("0.3.0", manifest["version"])
         self.assertEqual("bin/install.mjs", manifest["bin"]["anti-ai-defensive-writing"])
         self.assertIn("skills/anti-ai-defensive-writing", manifest["files"])
         self.assertIn("prompts", manifest["files"])
@@ -80,10 +82,23 @@ class SkillPackageChecks(unittest.TestCase):
 
     def test_integrity_checker_is_packaged(self):
         checker = SKILL_DIR / "scripts" / "check_manuscript_integrity.py"
+        verifier = SKILL_DIR / "scripts" / "verify_bibliography_online.py"
         self.assertTrue(checker.is_file())
+        self.assertTrue(verifier.is_file())
         source = checker.read_text(encoding="utf-8")
         self.assertIn("check_manuscript", source)
-        self.assertNotRegex(source, r"(?m)^(?:from|import) (?:requests|httpx|urllib)")
+        verifier_source = verifier.read_text(encoding="utf-8")
+        for candidate in (source, verifier_source):
+            self.assertNotRegex(
+                candidate,
+                r"(?m)^(?:from|import) (?:requests|httpx|aiohttp)",
+            )
+
+    def test_readme_documents_one_command_online_verification(self):
+        for readme in (ROOT / "README.md", ROOT / "README.zh-CN.md"):
+            text = readme.read_text(encoding="utf-8")
+            self.assertIn("--verify-online", text)
+            self.assertIn("Crossref", text)
 
     def test_repository_readme_links_exist(self):
         for readme in (ROOT / "README.md", ROOT / "README.zh-CN.md"):
