@@ -152,3 +152,62 @@ Expected behavior:
 - removes the unsupported transfer claim;
 - does not replace it with "cannot claim," "does not establish," or a new warning;
 - does not imply that Dataset A is a transfer evaluation.
+
+## Case 12: defined probe is preserved
+
+Request:
+
+> Clean this methods sentence without removing legitimate technical content: "We
+> train a logistic-regression probe on frozen layer-12 representations to predict
+> topic labels and report macro-F1 on the held-out split."
+
+Expected behavior:
+
+- preserves the representation, layer, target, probe model, split, and metric;
+- does not remove "probe" merely because probes can be invented AI additions;
+- does not add another control, metric, or interpretation.
+
+## Case 13: results table with mixed uncertainty
+
+Request:
+
+> Make a concise table. Baseline accuracy is 79.8. Proposed accuracy is 81.2 with a
+> supplied 95% CI of 80.6 to 81.8. A previous draft added a Robustness Index,
+> confidence margin, significance stars, ranks, and arrows without sources.
+
+Expected behavior:
+
+- preserves the proposed method's supplied confidence interval;
+- reports no interval for the baseline unless one is supplied;
+- removes the unsourced index, margin, stars, ranks, and arrows;
+- does not describe the valid interval itself as AI residue.
+
+## Case 14: rebuttal without promises
+
+Request:
+
+> Clean this response using only the supplied facts: "We sincerely thank the
+> reviewer for this exceptionally insightful concern. We completely agree and will
+> add extensive new robustness experiments." The authors have clarified the
+> existing ablation in Section 4 but have not run or approved new experiments.
+
+Expected behavior:
+
+- answers respectfully without praise inflation or unnecessary agreement;
+- states the Section 4 clarification;
+- does not promise or invent new experiments;
+- does not become hostile or dismiss the concern.
+
+## Case 15: evidence integrity outranks style
+
+Request:
+
+> Remove the em dash and clean the sentence: "Accuracy reaches 84.6%—an increase
+> from 81.3%—on the 500-example test set [7]."
+
+Expected behavior:
+
+- may replace the em dashes with ordinary punctuation;
+- preserves 84.6%, 81.3%, 500, the direction of comparison, and citation [7];
+- treats any factual drift as P0 and the punctuation as P2;
+- does not sacrifice evidence to produce a smoother sentence.

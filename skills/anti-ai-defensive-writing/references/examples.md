@@ -57,6 +57,17 @@ Source:
 Keep it. "Margin" has a defined mathematical role. It is not an AI artifact merely
 because models sometimes insert it unnecessarily.
 
+## Legitimate probe
+
+Source:
+
+> We train a logistic-regression probe on frozen layer-12 representations to predict
+> topic labels and report macro-F1 on the held-out split.
+
+Keep the probe and its definition. The representation, prediction target, probe
+model, split, and metric are all specified. Cleaning AI-defensive writing does not
+mean deleting a real auxiliary experiment.
+
 ## Undefined probe
 
 Before:

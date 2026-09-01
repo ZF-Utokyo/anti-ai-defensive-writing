@@ -5,8 +5,9 @@ description: >
   caveats, unsupported statistical machinery, invented metrics or probes,
   gratuitous em dashes or italics, opaque abstraction, and claims weakened below
   what the evidence supports. Use for cleaning AI-generated abstracts, papers,
-  results, captions, and tables while preserving facts and legitimate uncertainty.
-  Do not use this skill to conduct statistical analysis or peer review itself.
+  methods, results, captions, tables, conclusions, and rebuttals while preserving
+  facts and legitimate uncertainty. Do not use this skill to conduct statistical
+  analysis or peer review itself.
 ---
 
 # Anti AI-Defensive Writing
@@ -25,9 +26,11 @@ the reader understand the work.
    margins, probes, metrics, experiments, citations, or methodological details.
 3. State the strongest claim the supplied evidence supports. Do not strengthen it
    past the evidence or weaken it into reflexive uncertainty.
-4. Treat user-supplied statistics as evidence. If a supplied quantity is undefined
-   or untraceable, flag it once or ask for its definition; do not silently delete,
-   reinterpret, or reverse-engineer it.
+4. Treat user-supplied statistics as evidence unless the user explicitly identifies
+   them as model-added, unverified, fabricated, or source-free. Remove such
+   quarantined artifacts in Clean mode; retain and label them only when the user
+   asks to audit or trace them. If the status of a quantity is unclear, flag it once
+   or ask for its source instead of guessing.
 5. Do not turn editing into unsolicited peer review. Raise a validity problem only
    when it materially changes the requested claim or output.
 
@@ -41,6 +44,11 @@ the reader understand the work.
 
 Infer the mode from the request. Ask only when different modes would produce
 materially different deliverables.
+
+Match the passage to its academic context before revising. Read only the relevant
+section of [context-profiles.md](references/context-profiles.md) for abstracts and
+introductions, methods, results, tables and captions, discussions and conclusions,
+or rebuttals and review responses.
 
 ## Apply the four tests
 
@@ -56,6 +64,23 @@ Keep source-backed evidence. Keep required elements. Clarify elements that are
 necessary but undefined. Remove model-added elements that have no defensible
 source, requirement, or interpretive value. Present genuinely useful new analysis
 only as an explicit proposal, never as completed work.
+
+## Triage by consequence
+
+Assign the highest applicable severity and resolve higher-severity problems first:
+
+- **P0, evidence integrity:** changed or invented numbers, uncertainty, citations,
+  equations, metrics, probes, experiments, conditions, or claim scope. Never trade
+  evidence integrity for cleaner style.
+- **P1, analytical defensiveness:** reflexive caveats, unsupported interpretations,
+  claim paralysis, vague abstraction, reviewer voice, or unnecessary analytical
+  commitments.
+- **P2, presentation residue:** gratuitous em dashes, italics, bold text,
+  parentheticals, table decoration, or other formatting that adds no meaning.
+
+In Audit mode, report this severity with each consequential finding. Do not label a
+defined technical term or explicit style choice as a problem merely because it
+resembles an AI habit.
 
 ## Clean the prose
 
@@ -101,6 +126,32 @@ For tables, captions, emphasis, or document-level formatting, read
 When a pattern remains ambiguous or the user asks for an explanation, consult
 [examples.md](references/examples.md).
 
+## Run one integrity pass
+
+After drafting or cleaning, compare the revision with the supplied source once.
+Patch only the remaining problem; do not regenerate the passage stylistically.
+
+Check that:
+
+1. every number, citation, equation, unit, uncertainty statement, and scope
+   condition still maps to its source;
+2. no statistic, metric, probe, experiment, causal mechanism, or reference appeared
+   without support;
+3. the claim remains the strongest one the evidence supports;
+4. no new reviewer-voice caveat or formatting artifact was introduced.
+
+For file-based rewrites or passages with quantitative evidence, run the bundled
+checker when both versions are available:
+
+```bash
+python3 scripts/check_academic_rewrite.py before.md after.md
+```
+
+Treat P0 errors as blocking. Inspect P1 warnings in context. Use
+`--allow-new-analysis` or `--allow-structure-change` only when the user's request
+explicitly authorizes that change. Use `--allow-drop-number VALUE` only for a value
+the user has explicitly quarantined as an unsupported draft artifact.
+
 ## Output contract
 
 For Draft or Clean mode:
@@ -111,9 +162,9 @@ For Draft or Clean mode:
 3. Do not produce an unsolicited style lecture, reviewer report, or catalog of
    hypothetical limitations.
 
-For Audit mode, report each consequential finding as: artifact, why it is a
-problem here, and the smallest useful repair. Do not flag a harmless pattern merely
-because it resembles a common AI habit.
+For Audit mode, report each consequential finding as: severity, artifact, why it is
+a problem here, and the smallest useful repair. Do not flag a harmless pattern
+merely because it resembles a common AI habit.
 
 ## Final check
 

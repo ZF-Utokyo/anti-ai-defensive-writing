@@ -5,13 +5,18 @@ metrics, experimental design, or claim strength.
 
 ## Classify every analytical element
 
-- **Source-backed:** Present in user data, text, cited material, or verified output.
-  Preserve it accurately.
+- **Source-backed:** Present in user data, cited material, or verified output.
+  Preserve it accurately. Mere appearance in a draft is insufficient when the user
+  explicitly identifies the item as an unsourced AI addition.
 - **Task-required:** Requested by the user or required by a stated venue or method.
   Include it when the necessary inputs exist.
 - **Proposed:** Potentially useful but not supplied or computed. Label it as a
   suggestion and explain what data or procedure it would require.
 - **Unsupported:** Neither supplied, required, computed, nor justified. Remove it.
+
+When the user explicitly quarantines a draft value as fabricated, unverified, or
+source-free, remove both the construct and its value in Clean mode. Do not repeat it
+in a disclaimer. In Audit mode, quote it only to identify the artifact.
 
 Never promote a proposed element into a reported result.
 

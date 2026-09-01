@@ -14,11 +14,23 @@ writing that the current Skill handles poorly.
 Avoid expanding a blacklist whenever a provenance or relevance rule would handle
 the same failure more generally.
 
+If the Skill removed legitimate academic content, use the dedicated
+[false-positive issue form](https://github.com/ZF-Utokyo/anti-ai-defensive-writing/issues/new?template=false-positive.yml).
+Include the smallest public excerpt, its academic context, and the fact, definition,
+venue rule, or author preference that should protect it.
+
 ## Validation
 
+Run:
+
+```bash
+python -m unittest discover -s tests -v
+python scripts/check_policy_sync.py
+```
+
 Validate the Skill structure with the `quick_validate.py` script distributed with
-the Codex `skill-creator` Skill, then run the cases in [`evals/cases.md`](evals/cases.md)
-as forward tests with a fresh model context.
+the Codex `skill-creator` Skill, then run relevant cases in
+[`evals/cases.md`](evals/cases.md) as forward tests with a fresh model context.
 
 Pull requests should explain the failure case, the behavioral change, and the cases
 used for validation.

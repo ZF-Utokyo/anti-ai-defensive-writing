@@ -1,0 +1,69 @@
+name: Legitimate academic writing was removed or weakened
+description: Report a valid term, statistic, claim, or style choice that the Skill handled incorrectly.
+title: "[false positive] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This project reviews writing behavior, not whether a person used AI. Share only text you are allowed to publish.
+  - type: dropdown
+    id: context
+    attributes:
+      label: Academic context
+      options:
+        - Abstract or introduction
+        - Methods
+        - Results
+        - Table or caption
+        - Discussion or conclusion
+        - Rebuttal or review response
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Original excerpt and supporting context
+      description: Include the smallest excerpt that reproduces the problem and any fact, definition, or venue rule that makes it legitimate.
+    validations:
+      required: true
+  - type: textarea
+    id: request
+    attributes:
+      label: Request given to the agent
+      description: Paste the instruction that triggered the Skill.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What the Skill did
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: Describe the observable behavior, not one required sentence.
+    validations:
+      required: true
+  - type: dropdown
+    id: protected_reason
+    attributes:
+      label: Why should the content be preserved?
+      options:
+        - Supplied evidence or uncertainty
+        - Defined technical term
+        - Venue or reporting requirement
+        - Explicit author style choice
+        - Necessary claim boundary
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: sharing
+    attributes:
+      label: Sharing confirmation
+      options:
+        - label: I am allowed to share this excerpt publicly and removed sensitive information.
+          required: true
