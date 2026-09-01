@@ -5,7 +5,8 @@
 An English, zero-dependency AI skill for removing unrequested caveats, faux rigor,
 opaque abstraction, and formatting residue from academic writing without weakening
 claims that the evidence supports. It also provides an opt-in manuscript-integrity
-audit for LaTeX references, figures, tables, BibTeX, acronyms, and terminology.
+audit for LaTeX references, figures, tables, BibTeX, acronyms, and terminology,
+plus an evidence-grounded workflow for rebuttals and reviewer responses.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
@@ -36,12 +37,31 @@ figures, tables, references, BibTeX, acronyms, and terminology. Run the bundled
 checker with online reference verification. Do not modify my files.
 ```
 
+For a reviewer response that does not invent promises:
+
+```text
+Use $anti-ai-defensive-writing to draft a rebuttal from the supplied review and
+manuscript. Answer each concern with existing evidence and an exact location.
+Do not promise new work unless I have approved it.
+```
+
 Most users can stop here. Codex selects and runs the bundled checker when the task
 needs deterministic validation.
 
 ## Skill and checkers
 
-The repository has one reasoning layer and two deterministic safety nets:
+The Skill has two task paths:
+
+| Path | Purpose |
+| --- | --- |
+| Paper | Draft, clean, or check manuscript prose, evidence, structure, and bibliography |
+| Rebuttal | Map reviewer comments to existing evidence, exact locations, and authorized actions |
+
+Submission, revision, and camera-ready work stay on the Paper path; venue rules
+change, but the evidence workflow does not. Rebuttal stays separate because the
+primary artifact is a response to reviewer comments.
+
+The repository also includes two deterministic safety nets for the Paper path:
 
 | Component | Use it for | How to invoke it |
 | --- | --- | --- |
@@ -121,6 +141,7 @@ information.
 - unsupported statistical and methodological additions;
 - em dashes, italics, bold text, and other synthetic formatting habits;
 - abstract or difficult sentences that can be made concrete;
+- rebuttals, responses to meta-reviews, and revision letters;
 - optional figure/table, cross-reference, BibTeX, acronym, and terminology audits.
 
 It has four modes:
@@ -298,6 +319,7 @@ cp -r skills/anti-ai-defensive-writing ~/.codex/skills/
 - [Audit without a full rewrite](prompts/audit-prompt.txt)
 - [Clean a complete manuscript](prompts/full-manuscript-prompt.txt)
 - [Audit manuscript integrity](prompts/integrity-prompt.txt)
+- [Draft or clean a rebuttal](prompts/rebuttal-prompt.txt)
 
 These are task entry points, not separate policy implementations. The repository
 checks that they retain the same evidence-integrity rules as the Skill.

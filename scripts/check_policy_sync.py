@@ -13,6 +13,7 @@ DOCUMENTS = {
     "audit-prompt": ROOT / "prompts" / "audit-prompt.txt",
     "full-manuscript-prompt": ROOT / "prompts" / "full-manuscript-prompt.txt",
     "integrity-prompt": ROOT / "prompts" / "integrity-prompt.txt",
+    "rebuttal-prompt": ROOT / "prompts" / "rebuttal-prompt.txt",
 }
 
 INVARIANTS = {

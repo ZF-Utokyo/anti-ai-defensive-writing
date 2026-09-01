@@ -5,7 +5,8 @@
 这是一个面向学术写作的英文 Skill，用来清理 AI 自动加入的防御性表达、
 伪严谨分析、抽象难懂的句子和无意义格式，同时保护论文中的真实证据。
 它还提供可选的论文完整性审计，用来检查 LaTeX 引用、图表顺序、BibTeX、
-缩写定义和全文术语一致性。
+缩写定义和全文术语一致性，并提供基于论文证据撰写 rebuttal 和 reviewer
+response 的独立工作流。
 
 > 保留证据，删除虚构的严谨，写出证据能够支持的最强结论。
 
@@ -90,16 +91,36 @@ Use $anti-ai-defensive-writing in Integrity mode. Audit main.tex and run the
 bundled checker with online reference verification. Do not modify my files.
 ```
 
+撰写 rebuttal：
+
+```text
+Use $anti-ai-defensive-writing to draft a rebuttal from the supplied review and
+manuscript. Answer each concern with existing evidence and an exact location.
+Do not promise new work unless I have approved it.
+```
+
 可直接复用的英文入口：
 
 - [普通清理](prompts/quick-prompt.txt)
 - [仅审查](prompts/audit-prompt.txt)
 - [全文清理](prompts/full-manuscript-prompt.txt)
 - [论文完整性审计](prompts/integrity-prompt.txt)
+- [Rebuttal 与 reviewer response](prompts/rebuttal-prompt.txt)
 
 ## Skill 和 Checker 的区别
 
-这个项目包含一层 AI 判断和两个确定性安全网：
+Skill 只有两条任务路径：
+
+| 路径 | 用途 |
+| --- | --- |
+| Paper | 写作、清理或检查论文正文、证据、结构和参考文献 |
+| Rebuttal | 把 reviewer comment 映射到现有证据、准确位置和作者批准的行动 |
+
+Submission、revision 和 camera-ready 都属于 Paper。它们的 venue 要求可能不同，
+但处理论文证据的方式相同。Rebuttal 单独处理，因为它的主要产物是对 reviewer
+comment 的回复，而不是论文正文。
+
+这个项目还为 Paper 路径提供两个确定性安全网：
 
 | 组件 | 适合解决的问题 | 使用方式 |
 | --- | --- | --- |

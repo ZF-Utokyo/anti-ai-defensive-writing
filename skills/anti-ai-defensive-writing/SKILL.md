@@ -5,11 +5,12 @@ description: >
   caveats, unsupported statistical machinery, invented metrics or probes,
   gratuitous em dashes or italics, opaque abstraction, and claims weakened below
   what the evidence supports. Use for cleaning AI-generated abstracts, papers,
-  methods, results, captions, tables, conclusions, and rebuttals while preserving
-  facts and legitimate uncertainty, or for optional manuscript-integrity audits of
-  LaTeX cross-references, figure and table order, BibTeX records, acronyms, and
-  terminology. Do not use this skill to conduct statistical analysis or peer
-  review itself.
+  methods, results, captions, tables, and conclusions while preserving facts and
+  legitimate uncertainty; for evidence-grounded rebuttals, reviewer responses, and
+  revision letters; or for optional manuscript-integrity audits of LaTeX
+  cross-references, figure and table order, BibTeX records, acronyms, and
+  terminology. Do not use this skill to conduct statistical analysis or peer review
+  itself.
 ---
 
 # Anti AI-Defensive Writing Skill
@@ -52,7 +53,14 @@ materially different deliverables.
 Match the passage to its academic context before revising. Read only the relevant
 section of [context-profiles.md](references/context-profiles.md) for abstracts and
 introductions, methods, results, tables and captions, discussions and conclusions,
-or rebuttals and review responses.
+or other manuscript prose.
+
+When the user asks for a rebuttal, author response, response to a meta-review, or
+revision letter, read
+[rebuttal-workflow.md](references/rebuttal-workflow.md). Keep the paper and the
+review response as separate evidence surfaces. Build the comment-to-evidence ledger
+internally, ground each response in an exact location, and do not promise
+unapproved work.
 
 When the supplied material spans multiple manuscript sections, also read
 [whole-manuscript-workflow.md](references/whole-manuscript-workflow.md). Build its

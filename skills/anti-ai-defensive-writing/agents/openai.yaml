@@ -1,4 +1,4 @@
 interface:
   display_name: "Anti AI-Defensive Writing Skill"
-  short_description: "Clean prose and audit manuscript integrity"
-  default_prompt: "Use $anti-ai-defensive-writing to clean this academic passage or audit its references and terminology while preserving the evidence."
+  short_description: "Clean papers, check evidence, and draft rebuttals"
+  default_prompt: "Use $anti-ai-defensive-writing to clean this academic passage, audit the manuscript, or draft an evidence-grounded rebuttal."

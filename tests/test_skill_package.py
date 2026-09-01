@@ -58,12 +58,24 @@ class SkillPackageChecks(unittest.TestCase):
         self.assertIn("--verify-online", workflow)
         self.assertIn("Crossref", workflow)
 
+    def test_rebuttal_reference_is_routed_from_skill(self):
+        text = SKILL_FILE.read_text(encoding="utf-8")
+        self.assertIn("references/rebuttal-workflow.md", text)
+        workflow = SKILL_DIR.joinpath(
+            "references", "rebuttal-workflow.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("comment-to-evidence ledger", workflow)
+        self.assertIn("Authorized action", workflow)
+        self.assertIn("never write \"we added,\"", workflow)
+        self.assertRegex(workflow, r"Do not predict score\s+changes")
+
     def test_repository_prompt_entry_points_exist(self):
         prompt_names = {
             "quick-prompt.txt",
             "audit-prompt.txt",
             "full-manuscript-prompt.txt",
             "integrity-prompt.txt",
+            "rebuttal-prompt.txt",
         }
         prompt_directory = ROOT / "prompts"
         self.assertEqual(
@@ -74,7 +86,7 @@ class SkillPackageChecks(unittest.TestCase):
     def test_npm_manifest_installs_the_skill(self):
         manifest = json.loads(ROOT.joinpath("package.json").read_text(encoding="utf-8"))
         self.assertEqual("anti-ai-defensive-writing", manifest["name"])
-        self.assertEqual("0.3.0", manifest["version"])
+        self.assertEqual("0.4.0", manifest["version"])
         self.assertEqual("bin/install.mjs", manifest["bin"]["anti-ai-defensive-writing"])
         self.assertIn("skills/anti-ai-defensive-writing", manifest["files"])
         self.assertIn("prompts", manifest["files"])

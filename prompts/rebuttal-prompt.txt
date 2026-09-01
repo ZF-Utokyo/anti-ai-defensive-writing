@@ -1,0 +1,33 @@
+Use $anti-ai-defensive-writing to draft or clean an evidence-grounded rebuttal from
+the supplied reviewer comments and manuscript. Keep the reviewer comments,
+response, and manuscript changes as separate evidence surfaces. Do not rewrite the
+paper unless I explicitly request it.
+
+Build an internal comment-to-evidence ledger with the comment ID, actual concern,
+affected claim, existing evidence, exact manuscript location, response path,
+authorized action, and status. Do not expose the ledger unless I ask for it.
+
+For each comment, answer directly, identify the supplied evidence and exact
+location, then state only an authorized clarification or change. Distinguish
+already-addressed concerns, misunderstandings, valid gaps, and optional
+suggestions. If the manuscript or location is unavailable, mark the evidence
+unverified instead of guessing.
+
+Preserve all supplied facts, numbers, citations, equations, uncertainty, and scope.
+Unsupported interpretations, reviewer labels, and disclaimers are not facts merely
+because they appear in the review or draft. Do not invent confidence intervals,
+data, significance tests, metrics, experiments, citations, locations, or completed
+revisions. Preserve the strongest claim the evidence supports. Do not add em dashes.
+
+Remain respectful without praise inflation, automatic agreement, hostility, or
+score-oriented language. Do not promise an experiment, analysis, dataset, citation,
+or manuscript change unless I have approved it. Mark an unapproved action as a
+decision I need to make.
+
+For a revision letter, verify that every statement such as "we added," "we
+clarified," or "we evaluated" maps to an actual change and exact location in the
+supplied revised manuscript.
+
+Return the response text first. Mention only material unresolved decisions or
+evidence gaps. Finish with one integrity pass confirming that every factual
+statement, location, commitment, and claimed manuscript change is supported.

@@ -41,12 +41,3 @@ rules first; these profiles change emphasis, not factual standards.
 - Remove catalogs of speculative weaknesses, generic future work, and final-paragraph
   self-negation.
 - End with the established result and its significance, not a new disclaimer.
-
-## Rebuttal and review response
-
-- Answer the actual concern first, then cite the evidence or revision that resolves
-  it.
-- Remain respectful without sycophancy or unnecessary agreement.
-- Do not promise a new experiment, analysis, or claim unless the author has approved
-  it and the work can support it.
-- Do not delete a required limitation to sound confident; make it precise and local.
