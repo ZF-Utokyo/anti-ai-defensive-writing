@@ -2,6 +2,9 @@
 
 **English** · [简体中文快速上手](README.zh-CN.md)
 
+> Struggling with em dashes, invented confidence intervals, fake metrics, and
+> endless “we do not claim” disclaimers in AI-assisted academic writing?
+
 An English, zero-dependency AI skill for removing unrequested caveats, faux rigor,
 opaque abstraction, and formatting residue from academic writing without weakening
 claims that the evidence supports. It also provides opt-in manuscript-integrity
