@@ -11,6 +11,60 @@ audit for LaTeX references, figures, tables, BibTeX, acronyms, and terminology.
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Test](https://github.com/ZF-Utokyo/anti-ai-defensive-writing/actions/workflows/test.yml/badge.svg)](https://github.com/ZF-Utokyo/anti-ai-defensive-writing/actions/workflows/test.yml)
 
+## Quick start
+
+Install the Skill for Codex:
+
+```bash
+npx --yes github:ZF-Utokyo/anti-ai-defensive-writing --agent codex
+```
+
+Then paste a passage, attach a manuscript, or point Codex to a workspace file and
+ask in natural language:
+
+```text
+Use $anti-ai-defensive-writing to clean this results section. Preserve every
+number, citation, equation, and supported claim. Do not add analyses, metrics,
+experiments, or reviewer-style caveats.
+```
+
+For a read-only LaTeX audit with online bibliography verification:
+
+```text
+Use $anti-ai-defensive-writing in Integrity mode. Audit main.tex, including
+figures, tables, references, BibTeX, acronyms, and terminology. Run the bundled
+checker with online reference verification. Do not modify my files.
+```
+
+Most users can stop here. Codex selects and runs the bundled checker when the task
+needs deterministic validation.
+
+## Skill and checkers
+
+The repository has one reasoning layer and two deterministic safety nets:
+
+| Component | Use it for | How to invoke it |
+| --- | --- | --- |
+| Skill | Drafting, cleaning, auditing, and evidence-aware judgment | Ask the agent using `$anti-ai-defensive-writing` |
+| Rewrite checker | Comparing an original passage with an AI-edited version | Run `check_academic_rewrite.py before after` |
+| Manuscript checker | Auditing a complete LaTeX project and its bibliography | Run `check_manuscript_integrity.py main.tex` |
+
+The checker scripts do not decide whether prose is human or AI. They protect
+deterministic evidence and manuscript structure, while the Skill handles semantic
+questions such as whether a caveat is necessary or two technical terms are truly
+equivalent.
+
+The `npx` command installs the Skill; it does not expose a `check` subcommand.
+An agent can run the bundled scripts for you. The shell commands below assume a
+cloned repository. After a personal Codex installation, the scripts are under:
+
+```text
+~/.codex/skills/anti-ai-defensive-writing/scripts/
+```
+
+Claude uses `~/.claude/skills/anti-ai-defensive-writing/scripts/`, and a project
+installation uses `./skills/anti-ai-defensive-writing/scripts/`.
+
 ## The problem
 
 AI writing tools often try to sound rigorous by adding things the author never
@@ -102,7 +156,9 @@ Problems are ordered by consequence:
 P0 always outranks style. The Skill never makes a sentence cleaner by making its
 evidence less accurate.
 
-## Academic rewrite checker
+## Checkers
+
+### Compare an academic rewrite
 
 The Skill includes an optional, zero-dependency Python checker for revisions where
 both the original and edited files are available:
@@ -129,7 +185,7 @@ those changes. When the author explicitly identifies a number as a fabricated or
 unsourced draft artifact, pass `--allow-drop-number VALUE` once for each permitted
 deletion. All other numeric drift remains a P0 error.
 
-## Manuscript integrity audit
+### Audit a LaTeX manuscript
 
 The optional integrity workflow keeps structural checks separate from prose
 cleanup. For a LaTeX project, run:
@@ -193,13 +249,24 @@ their hosted interfaces or undocumented endpoints. Claim-support auditing is a
 separate, explicit request. An excerpt without its Results section is not evidence
 that the full manuscript lacks support.
 
-## Install
+### Understand checker results
 
-Install the Skill directly from GitHub:
+P0, P1, and P2 follow the [severity model](#severity-model) above. By default, a
+checker exits with status 1 for a P0 failure; `--strict` also fails on P1 and P2
+findings. Configuration errors return status 2.
 
-```bash
-npx --yes github:ZF-Utokyo/anti-ai-defensive-writing --agent codex
-```
+Online bibliography results use these states:
+
+- `verified`: the compared fields agree;
+- `likely_match`: the record matches, with incomplete fields or a possible venue
+  alias to review;
+- `ambiguous` or `not_found`: automatic verification is inconclusive, not proof of
+  fabrication;
+- `conflicting_metadata`: important supplied and source fields disagree;
+- `provider_error` or `unverifiable`: the provider failed or the record lacks
+  enough query metadata.
+
+## Installation options
 
 Inspect the resolved target without writing files:
 
@@ -211,19 +278,18 @@ Supported destinations are `codex`, `claude`, and `project`. Use `--dir PATH` to
 select another parent directory. Existing installations are refused by default;
 `--force` moves the old installation to a timestamped backup before replacing it.
 
-Manual installation remains available:
+Install for Claude or the current project:
 
-Copy the Skill directory into your agent's Skill directory. For Codex:
+```bash
+npx --yes github:ZF-Utokyo/anti-ai-defensive-writing --agent claude
+npx --yes github:ZF-Utokyo/anti-ai-defensive-writing --agent project
+```
+
+Manual installation also remains available. Copy the Skill directory into the
+agent's Skill directory. For Codex:
 
 ```bash
 cp -r skills/anti-ai-defensive-writing ~/.codex/skills/
-```
-
-Then ask:
-
-```text
-Use $anti-ai-defensive-writing to clean this abstract without adding statistics or
-weakening supported claims.
 ```
 
 ## Ready-to-use prompts

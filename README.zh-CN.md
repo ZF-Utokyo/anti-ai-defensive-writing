@@ -51,6 +51,8 @@ cp -r skills/anti-ai-defensive-writing ~/.codex/skills/
 
 ## 使用方式
 
+可以直接粘贴文字、附加论文文件，或者告诉 Codex 工作区中的文件路径。
+
 清理一段文字：
 
 ```text
@@ -62,7 +64,7 @@ number and citation, and do not add analyses or weaken supported claims.
 
 ```text
 Use $anti-ai-defensive-writing in Audit mode. Report only consequential P0, P1,
-and P2 problems and propose the smallest repair.
+and P2 problems and propose the smallest repair. Do not modify my files.
 ```
 
 清理完整论文：
@@ -81,12 +83,57 @@ table citations, LaTeX references, BibTeX records, acronym definitions, and
 terminology consistency without rewriting the prose.
 ```
 
+如果希望同时在线核验文献：
+
+```text
+Use $anti-ai-defensive-writing in Integrity mode. Audit main.tex and run the
+bundled checker with online reference verification. Do not modify my files.
+```
+
 可直接复用的英文入口：
 
 - [普通清理](prompts/quick-prompt.txt)
 - [仅审查](prompts/audit-prompt.txt)
 - [全文清理](prompts/full-manuscript-prompt.txt)
 - [论文完整性审计](prompts/integrity-prompt.txt)
+
+## Skill 和 Checker 的区别
+
+这个项目包含一层 AI 判断和两个确定性安全网：
+
+| 组件 | 适合解决的问题 | 使用方式 |
+| --- | --- | --- |
+| Skill | 写作、清理、审查，以及判断限定语或术语是否必要 | 在对话中调用 `$anti-ai-defensive-writing` |
+| 修改对比 Checker | 检查 AI 修改前后是否丢失或发明证据 | 对 `before` 和 `after` 文件运行脚本 |
+| 论文完整性 Checker | 检查完整 LaTeX 项目的结构与文献 | 对 `main.tex` 运行脚本 |
+
+Checker 不判断文章“像不像 AI”。脚本负责数字、引用、公式、label 和 BibTeX
+等确定性问题；Skill 负责判断免责声明是否多余、claim 是否被削弱、术语是否
+真的等价等语义问题。普通用户只需要安装 Skill 并告诉 Codex 目标，Codex 会在
+需要时运行 Checker。
+
+`npx` 命令只负责安装 Skill，不提供单独的 `check` 子命令。下面的脚本命令
+默认从克隆后的仓库根目录运行。通过 `npx` 安装到 Codex 后，脚本位于：
+
+```text
+~/.codex/skills/anti-ai-defensive-writing/scripts/
+```
+
+Claude 的对应目录是 `~/.claude/skills/anti-ai-defensive-writing/scripts/`；
+项目安装的对应目录是 `./skills/anti-ai-defensive-writing/scripts/`。
+
+## 修改前后证据检查
+
+如果有 AI 修改前后的两个文本或 Markdown 文件，运行：
+
+```bash
+python3 skills/anti-ai-defensive-writing/scripts/check_academic_rewrite.py \
+  before.md after.md
+```
+
+它会检查数字、LaTeX 和数字引用、公式、URL、代码块、Markdown 标题层级，
+以及只在修改后出现的分析术语和审稿人口吻。它不是 AI 文本检测器，而是检查
+修改有没有损坏或发明证据。
 
 ## 论文完整性审计
 
@@ -128,7 +175,7 @@ provider_error 和 unverifiable，并尽量给出字段差异与来源链接。
 claim。只有用户明确要求时才审查 citation 是否支持 claim；不能因为当前只
 提供了摘要或引言，就判断完整论文缺少证据。
 
-## 问题分级
+## 如何看检查结果
 
 - **P0，证据完整性：** 数字、引用、公式、指标、实验、条件或结论范围被修改或虚构，
   或者存在未解析引用与冲突 key。
@@ -137,6 +184,17 @@ claim。只有用户明确要求时才审查 citation 是否支持 claim；不�
 - **P2，非阻塞清理：** 无意义的破折号、斜体、粗体、括号、表格装饰或未使用记录。
 
 P0 永远优先于风格。为了让句子更顺而损坏证据，属于失败的修改。
+
+在线文献核验还会返回：
+
+- `verified`：关键字段一致；
+- `likely_match`：基本匹配，但字段不完整或 venue 可能使用别名；
+- `ambiguous` 或 `not_found`：自动核验无法确定，不能据此判定文献是虚构的；
+- `conflicting_metadata`：作者、标题、年份或 DOI 等重要字段冲突；
+- `provider_error` 或 `unverifiable`：服务失败，或者记录缺少足够的检索字段。
+
+默认情况下，P0 会让脚本返回失败状态；加入 `--strict` 后，P1 和 P2 也会返回
+失败状态。脚本只报告问题，不会自动修改论文或参考文献。
 
 ## 更多信息
 
