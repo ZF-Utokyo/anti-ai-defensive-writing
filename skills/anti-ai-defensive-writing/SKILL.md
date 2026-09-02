@@ -3,14 +3,15 @@ name: anti-ai-defensive-writing
 description: >
   Draft or revise academic writing without unrequested AI defensiveness: reflexive
   caveats, unsupported statistical machinery, invented metrics or probes,
-  gratuitous em dashes or italics, opaque abstraction, and claims weakened below
-  what the evidence supports. Use for cleaning AI-generated abstracts, papers,
-  methods, results, captions, tables, and conclusions while preserving facts and
-  legitimate uncertainty; for evidence-grounded rebuttals, reviewer responses, and
-  revision letters; for review-package anonymity and camera-ready release audits;
-  or for optional manuscript-integrity audits of LaTeX cross-references, figure and
-  table order, BibTeX records, acronyms, and terminology. Do not use this skill to
-  conduct statistical analysis or peer review itself.
+  rhetorical insertions that manufacture cadence, gratuitous em dashes or italics,
+  opaque abstraction, and claims weakened below what the evidence supports. Use for
+  cleaning AI-generated abstracts, papers, methods, results, captions, tables, and
+  conclusions while preserving facts and legitimate uncertainty; for
+  evidence-grounded rebuttals, reviewer responses, and revision letters; for
+  review-package anonymity and camera-ready release audits; or for optional
+  manuscript-integrity audits of LaTeX cross-references, figure and table order,
+  BibTeX records, acronyms, and terminology. Do not use this skill to conduct
+  statistical analysis or peer review itself.
 ---
 
 # Anti AI-Defensive Writing Skill
@@ -85,8 +86,8 @@ all submissions are anonymous or claim that a text scan proves anonymity.
 
 ## Apply the four tests
 
-For each qualifier, statistic, metric, probe, formatting choice, or methodological
-claim, ask:
+For each qualifier, rhetorical insertion, statistic, metric, probe, formatting
+choice, or methodological claim, ask:
 
 1. **Provenance:** Is it supplied by the user or a cited source?
 2. **Necessity:** Is it required by the task, analysis, or venue?
@@ -109,11 +110,12 @@ Assign the highest applicable severity and resolve higher-severity problems firs
   style.
 - **P1, analytical defensiveness:** reflexive caveats, unsupported interpretations,
   claim paralysis, vague abstraction, reviewer voice, unnecessary analytical
-  commitments, structural and terminology ambiguities, or policy-dependent identity
-  surfaces that need verification.
+  commitments, rhetorical insertions that add unsupported evaluation, structural
+  and terminology ambiguities, or policy-dependent identity surfaces that need
+  verification.
 - **P2, presentation residue:** gratuitous em dashes, italics, bold text,
-  parentheticals, table decoration, unused records, package residue, or other
-  nonblocking cleanup.
+  cadence-only parentheticals, table decoration, unused records, package residue,
+  or other nonblocking cleanup.
 
 In Audit mode, report this severity with each consequential finding. Do not label a
 defined technical term or explicit style choice as a problem merely because it
@@ -135,8 +137,16 @@ resembles an AI habit.
   requests that style or when quoted text must remain exact.
 - Use italics and bold only when they carry a required semantic or style function.
   Do not use typography to manufacture emphasis or novelty.
+- Remove rhetorical insertions that manufacture cadence, importance, or surprise
+  without adding evidence, scope, definition, attribution, or meaning. Preserve a
+  scientific qualifier when deleting it would change when the claim is true.
 - Preserve the author's level of formality and terminology. Remove AI residue
   without flattening a distinctive voice.
+
+For comma-bounded asides, parentheticals, sentence-interrupting transitions, or
+evaluative em-dash insertions, read
+[rhetorical-insertions.md](references/rhetorical-insertions.md). Apply its deletion
+and truth-condition tests; do not ban punctuation or isolated words.
 
 ## Calibrate claims
 
@@ -175,7 +185,8 @@ Check that:
 2. no statistic, metric, probe, experiment, causal mechanism, or reference appeared
    without support;
 3. the claim remains the strongest one the evidence supports;
-4. no new reviewer-voice caveat or formatting artifact was introduced.
+4. no new reviewer-voice caveat, cadence-only insertion, or formatting artifact was
+   introduced.
 
 For file-based rewrites or passages with quantitative evidence, run the bundled
 checker when both versions are available:
@@ -255,6 +266,7 @@ and conclude ready, not ready, or unresolved without overstating coverage.
 - No statistic, metric, analysis, citation, or experiment was invented.
 - The claim is neither broader nor weaker than the evidence supports.
 - Technical terms are defined and relevant.
+- Cadence-only insertions are gone, while evidence-bearing qualifiers remain.
 - Formatting helps interpretation rather than simulating sophistication.
 - A requested release audit used the correct venue policy and exact upload bundle.
 - The result reads like an author communicating evidence, not an AI anticipating

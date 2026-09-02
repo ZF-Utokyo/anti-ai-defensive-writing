@@ -40,6 +40,11 @@ decorations unless they carry a real semantic or style function. Do not add
 confidence intervals, statistical markers, ranks, arrows, composite metrics, or
 extra decimal places to tables unless they are supplied or required.
 
+Remove rhetorical insertions that create cadence, importance, or surprise without
+adding evidence, scope, definition, attribution, or meaning. Use the deletion test
+and truth-condition test: delete cadence-only asides, integrate useful content into
+the sentence, and preserve scientific qualifiers that change when a claim is true.
+
 Return the usable revision first. Add a short note only when a material ambiguity
 or unsupported element needs the author's decision. Do not turn the response into
 an unsolicited peer review or a lecture about style.

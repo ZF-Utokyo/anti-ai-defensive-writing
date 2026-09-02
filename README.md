@@ -6,7 +6,7 @@
 
 <p align="center"><strong>English</strong> · <a href="README.zh-CN.md">简体中文</a></p>
 
-<p align="center"><em>Struggling with em dashes, invented confidence intervals,
+<p align="center"><em>Struggling with em-dash asides, invented confidence intervals,
 fake metrics, unverified BibTeX records, and endless “we do not claim” disclaimers
 in AI-assisted academic writing?</em></p>
 
@@ -95,7 +95,7 @@ core rule is simple:
 
 | Checker | Protects | Direct command |
 | --- | --- | --- |
-| Rewrite checker | Numbers, citations, equations, URLs, structure, and newly invented analysis | `check_academic_rewrite.py before after` |
+| Rewrite checker | Numbers, citations, equations, URLs, structure, newly invented analysis, and new cadence fillers | `check_academic_rewrite.py before after` |
 | Manuscript checker | LaTeX references, figure/table order, BibTeX, acronyms, and terminology leads | `check_manuscript_integrity.py main.tex`; add `--verify-online` for Crossref with a DBLP fallback |
 | Release checker | Review anonymity, camera-ready identity, metadata, file paths, and upload-package residue | `check_release_package.py PACKAGE --release ...` |
 

@@ -45,6 +45,23 @@ class SkillPackageChecks(unittest.TestCase):
         self.assertIn("evidence ledger", workflow.lower())
         self.assertIn("Do not add a paper-level defensiveness score", workflow)
 
+    def test_rhetorical_insertions_policy_is_routed_and_prompted(self):
+        text = SKILL_FILE.read_text(encoding="utf-8")
+        self.assertIn("references/rhetorical-insertions.md", text)
+        policy = SKILL_DIR.joinpath(
+            "references", "rhetorical-insertions.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("Deletion test", policy)
+        self.assertIn("Truth-condition test", policy)
+        self.assertIn("Preserve a necessary scientific qualifier", policy)
+        for prompt_name in (
+            "quick-prompt.txt",
+            "audit-prompt.txt",
+            "full-manuscript-prompt.txt",
+        ):
+            prompt = ROOT.joinpath("prompts", prompt_name).read_text(encoding="utf-8")
+            self.assertRegex(prompt, r"(?i)rhetorical insertions")
+
     def test_manuscript_integrity_reference_is_routed_from_skill(self):
         text = SKILL_FILE.read_text(encoding="utf-8")
         self.assertIn("references/manuscript-integrity.md", text)

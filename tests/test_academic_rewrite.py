@@ -89,6 +89,25 @@ class AcademicRewriteChecks(unittest.TestCase):
             self.codes(result.warnings),
         )
 
+    def test_new_rhetorical_insertion_is_p2_review_hint(self):
+        result = check_rewrite(
+            "The method does not require labeled data.",
+            "The method, perhaps more importantly, does not require labeled data.",
+        )
+        self.assertTrue(result.ok)
+        self.assertEqual(
+            ["introduced-rhetorical-insertion"], self.codes(result.warnings)
+        )
+        self.assertEqual("P2", result.warnings[0].severity)
+
+    def test_scientific_qualifier_is_not_a_cadence_filler(self):
+        result = check_rewrite(
+            "The estimator is unbiased under the independence assumption.",
+            "Under the independence assumption, the estimator is unbiased.",
+        )
+        self.assertTrue(result.ok)
+        self.assertEqual([], result.warnings)
+
     def test_explicit_analysis_override(self):
         result = check_rewrite(
             "Accuracy is 81.2.",

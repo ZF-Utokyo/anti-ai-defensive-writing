@@ -6,7 +6,7 @@
 
 <p align="center"><a href="README.md">English</a> · <strong>简体中文</strong></p>
 
-<p align="center"><em>AI 写作是不是又加了 em dash、凭空出现的置信区间、
+<p align="center"><em>AI 写作是不是又加了 em dash 插入语、凭空出现的置信区间、
 莫名其妙的指标、未经核验的 BibTeX 文献记录，以及没完没了的
 “we do not claim” 式免责声明？</em></p>
 
@@ -87,7 +87,7 @@ Dataset A 已经给出了真实边界，额外的免责声明没有增加证据�
 
 | Checker | 检查内容 | 直接命令 |
 | --- | --- | --- |
-| 修改对比 Checker | 数字、引用、公式、URL、结构和新增的虚构分析 | `check_academic_rewrite.py before after` |
+| 修改对比 Checker | 数字、引用、公式、URL、结构、新增的虚构分析和节奏填充语 | `check_academic_rewrite.py before after` |
 | 论文完整性 Checker | LaTeX 引用、图表顺序、BibTeX、缩写和术语线索 | `check_manuscript_integrity.py main.tex`；加入 `--verify-online` 后使用 Crossref，并在需要时回退到 DBLP |
 | Release Checker | Review 匿名、camera-ready 身份、metadata、路径和上传包残留 | `check_release_package.py PACKAGE --release ...` |
 

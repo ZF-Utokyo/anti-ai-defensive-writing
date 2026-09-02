@@ -58,6 +58,15 @@ DEFENSIVE_PATTERNS = {
     "generic future work": re.compile(r"\bfurther (?:research|work) is needed\b", re.I),
 }
 
+RHETORICAL_INSERTION_PATTERNS = {
+    "importance aside": re.compile(r"\b(?:perhaps\s+)?more importantly\b", re.I),
+    "surprise aside": re.compile(r"\bperhaps more surprisingly\b", re.I),
+    "note-taking frame": re.compile(r"\bit is worth noting that\b", re.I),
+    "apparent-simplicity aside": re.compile(
+        r"\b(?:despite its apparent simplicity|while seemingly simple)\b", re.I
+    ),
+}
+
 
 @dataclass(frozen=True)
 class Finding:
@@ -230,6 +239,16 @@ def check_rewrite(
                 "P1",
                 "introduced-defensiveness",
                 f"The rewrite introduces defensive reviewer voice: {label}",
+            )
+        )
+
+    for label in _introduced_counts(RHETORICAL_INSERTION_PATTERNS, before, after):
+        warnings.append(
+            Finding(
+                "P2",
+                "introduced-rhetorical-insertion",
+                "The rewrite introduces a likely cadence filler "
+                f"({label}); review whether it adds evidence, scope, or meaning",
             )
         )
 

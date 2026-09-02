@@ -12,8 +12,10 @@ neither broader nor weaker.
 Report only consequential findings. For each finding give its P0, P1, or P2
 severity, the artifact, why it is a problem in this context, and the smallest useful
 repair. Separate necessary uncertainty from reflexive reviewer-facing caution. Do
-not assign a defensiveness score, predict reviewer reactions, or turn the audit
-into unsolicited peer review.
+Use the deletion and truth-condition tests on rhetorical insertions: distinguish
+cadence-only asides from conditions, definitions, evidence, attribution, and
+uncertainty that must remain. Do not assign a defensiveness score, predict reviewer
+reactions, or turn the audit into unsolicited peer review.
 
 Finish with one integrity pass. Confirm that every proposed repair preserves the
 source evidence and introduces no unsupported analysis or formatting artifact.

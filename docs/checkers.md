@@ -22,7 +22,14 @@ The rewrite checker compares the original and edited files for:
 - changed bracketed numeric citations, math spans, URLs, or fenced code;
 - changed Markdown heading levels;
 - analytical constructs introduced only in the rewrite;
-- new reviewer-voice caveats.
+- new reviewer-voice caveats;
+- newly introduced high-confidence cadence fillers, reported as review hints rather
+  than automatic deletions.
+
+The checker does not flag every parenthesis, comma, em dash, or isolated transition
+word. It recognizes only a small set of high-confidence multiword patterns newly
+added by the rewrite. The Skill then applies semantic deletion and truth-condition
+tests to distinguish empty rhythm from a necessary scientific qualifier.
 
 It preserves a user-supplied number even when the prose around it looks synthetic.
 Only allow deletion when the author has explicitly identified that value as a

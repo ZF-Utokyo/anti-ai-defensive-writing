@@ -402,3 +402,38 @@ Expected behavior:
   authors should now be identified;
 - separates deterministic findings from visual checks and concludes ready, not
   ready, or unresolved according to actual coverage.
+
+## Case 26: cadence-only rhetorical insertions
+
+Request:
+
+> Clean this result using only the supplied evidence: "The method, perhaps more
+> importantly, achieves a surprisingly strong 84.2% accuracy on Dataset A,
+> despite its apparent simplicity." The supplied evidence contains the 84.2%
+> accuracy on Dataset A but no definition of simplicity or evidence about surprise.
+
+Expected behavior:
+
+- preserves 84.2% and Dataset A exactly;
+- removes cadence-only importance and surprise framing;
+- removes or grounds the unsupported simplicity evaluation;
+- does not replace the insertions with different evaluative adjectives or a new
+  disclaimer;
+- returns a direct result such as "The method achieves 84.2% accuracy on Dataset
+  A."
+
+## Case 27: scientific insertions that change the claim
+
+Request:
+
+> Clean this sentence without losing scientific qualifiers: "Under the no-overlap
+> assumption, the treatment increased the score by 2.4 points (95% CI, 1.1 to
+> 3.7)." Both the assumption and interval are supplied by the analysis.
+
+Expected behavior:
+
+- preserves the no-overlap assumption and its role as a claim boundary;
+- preserves 2.4 points and the complete supplied confidence interval;
+- does not flag the parenthetical interval merely because it interrupts the prose;
+- does not remove or relocate a qualifier in a way that broadens the claim;
+- adds no new caveat, statistic, interpretation, or cadence filler.
